@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Grid3x3, List, Plus, Minus } from "lucide-react";
 import { QuoteModal } from "@/components/QuoteModal";
+
 import { FloatingQuoteButton } from "@/components/FloatingQuoteButton";
 import { ComparisonBar } from "@/components/ComparisonBar";
 import { useToast } from "@/hooks/use-toast";
@@ -57,10 +58,16 @@ const Index = () => {
   const [minRating, setMinRating] = useState([0]);
   const [healthPlans, setHealthPlans] = useState<HealthPlan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [formQuoteOpen, setFormQuoteOpen] = useState(false);
+
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [selectedClinicas, setSelectedClinicas] = useState<Clinica[]>([]);
   const [openClinicSearch, setOpenClinicSearch] = useState(false);
   const [comparisonPlans, setComparisonPlans] = useState<string[]>([]);
+
+    const toggleForm = () => {
+    setFormQuoteOpen(!formQuoteOpen);
+  };
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -151,7 +158,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-secondary/30">
-      <FloatingQuoteButton onClick={() => setQuoteModalOpen(true)} />
+      <FloatingQuoteButton onClick={toggleForm} />
       <QuoteModal open={quoteModalOpen} onOpenChange={setQuoteModalOpen} />
       <ComparisonBar 
         plans={comparisonPlansList}
