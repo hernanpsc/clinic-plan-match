@@ -11,14 +11,20 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-interface HealthPlan {
-  id: number;
+interface Attribute {
   name: string;
-  provider: string;
+  value_name: string;
+  attribute_group_name: string;
+}
+
+interface HealthPlan {
+  _id: string;
+  name: string;
+  empresa: string;
   price: number;
   rating: number;
-  coverage: string;
-  features: string[];
+  linea: string;
+  attributes?: Attribute[];
 }
 
 const Index = () => {
@@ -52,13 +58,13 @@ const Index = () => {
     fetchPlans();
   }, [toast]);
 
-  const providers = Array.from(new Set(healthPlans.map(p => p.provider)));
+  const providers = Array.from(new Set(healthPlans.map(p => p.empresa)));
 
   const filteredPlans = healthPlans.filter(plan => {
     const matchesSearch = plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         plan.provider.toLowerCase().includes(searchTerm.toLowerCase());
+                         plan.empresa.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesPrice = plan.price >= priceRange[0] && plan.price <= priceRange[1];
-    const matchesProvider = selectedProviders.length === 0 || selectedProviders.includes(plan.provider);
+    const matchesProvider = selectedProviders.length === 0 || selectedProviders.includes(plan.empresa);
     const matchesRating = plan.rating >= minRating[0];
     
     return matchesSearch && matchesPrice && matchesProvider && matchesRating;
@@ -204,13 +210,13 @@ const Index = () => {
                 : "flex flex-col gap-4"
             }>
             {filteredPlans.map(plan => (
-              <Card key={plan.id} className={viewMode === "list" ? "flex flex-col md:flex-row" : ""}>
+              <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row" : ""}>
                 <div className="flex-1">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
                         <CardTitle className="text-lg">{plan.name}</CardTitle>
-                        <CardDescription>{plan.provider}</CardDescription>
+                        <CardDescription>{plan.empresa}</CardDescription>
                       </div>
                       <div className="flex items-center gap-1 bg-accent px-2 py-1 rounded">
                         <span className="text-sm font-medium">⭐ {plan.rating}</span>
@@ -218,12 +224,12 @@ const Index = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-3">{plan.coverage}</p>
+                    <p className="text-sm text-muted-foreground mb-3">{plan.linea}</p>
                     <ul className="space-y-1">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="text-sm flex items-center gap-2">
+                      {plan.attributes?.slice(0, 4).map((attr, idx) => (
+                        <li key={`${plan._id}-attr-${idx}`} className="text-sm flex items-center gap-2">
                           <span className="text-primary">✓</span>
-                          {feature}
+                          <span className="font-medium">{attr.name}:</span> {attr.value_name}
                         </li>
                       ))}
                     </ul>
