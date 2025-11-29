@@ -20,10 +20,11 @@ interface ComparisonBarProps {
   plans: HealthPlan[];
   onRemove: (planId: string) => void;
   onCompare: () => void;
+  isComparisonModalOpen?: boolean;
 }
 
-export const ComparisonBar = ({ plans, onRemove, onCompare }: ComparisonBarProps) => {
-  if (plans.length === 0) return null;
+export const ComparisonBar = ({ plans, onRemove, onCompare, isComparisonModalOpen }: ComparisonBarProps) => {
+  if (plans.length === 0 || isComparisonModalOpen) return null;
 
   const canCompare = plans.length >= 2 && plans.length <= 3;
 

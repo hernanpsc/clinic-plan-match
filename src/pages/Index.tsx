@@ -168,6 +168,7 @@ const Index = () => {
         plans={comparisonPlansList}
         onRemove={toggleComparison}
         onCompare={() => setComparisonModalOpen(true)}
+        isComparisonModalOpen={comparisonModalOpen}
       />
       
       <div className="flex">
