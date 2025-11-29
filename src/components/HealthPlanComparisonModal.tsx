@@ -328,11 +328,11 @@ export const HealthPlanComparisonModal = ({
           <table className="min-w-full table-fixed divide-y divide-border">
             <thead className="sticky-header">
               <tr>
-                <th scope="col" className="w-64 px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
+                <th scope="col" className="w-[400px] px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
                   Clínica
                 </th>
                 {plansToCompare.map(plan => (
-                  <th key={plan._id} scope="col" className="min-w-[250px] border-l border-border">
+                  <th key={plan._id} scope="col" className="w-[150px] border-l border-border">
                     <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
                   </th>
                 ))}
