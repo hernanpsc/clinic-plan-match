@@ -101,22 +101,24 @@ const ComparisonStyles = `
 
 // --- COMPONENTS ---
 const PlanHeader = React.memo(({ plan, onRemovePlan }: { plan: HealthPlan; onRemovePlan: (planId: string) => void }) => (
-  <div className="flex flex-col items-center justify-center p-3 h-full border-b border-border bg-muted/30">
-    <div className="text-lg font-extrabold text-primary truncate max-w-full">{plan.name}</div>
+  <div className="relative flex flex-col items-center justify-center p-3 h-full border-b border-border bg-muted/30">
+    <Button 
+      variant="ghost" 
+      size="icon"
+      onClick={() => onRemovePlan(plan._id)}
+      className="absolute top-2 right-2 h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+    >
+      <Trash2 className="w-4 h-4" />
+    </Button>
+    <div className="flex items-center gap-2 mb-1">
+      <div className="text-lg font-extrabold text-primary truncate max-w-full">{plan.name}</div>
+      <div className="flex items-center text-yellow-500 text-sm shrink-0">
+        <Star className="w-4 h-4 fill-yellow-500" />
+        <span className="ml-1">{plan.rating}</span>
+      </div>
+    </div>
     <div className="text-xs text-muted-foreground">{plan.empresa}</div>
     <div className="text-base font-bold text-green-600 mt-1">${plan.price}</div>
-    <div className="flex items-center text-yellow-500 text-sm mt-0.5">
-      <Star className="w-3 h-3 fill-yellow-500" />
-      <span className="ml-1">{plan.rating}/5</span>
-    </div>
-    <Button 
-      variant="destructive" 
-      size="sm"
-      onClick={() => onRemovePlan(plan._id)}
-      className="mt-2 h-6 px-2 text-xs"
-    >
-      <Trash2 className="w-3 h-3 mr-1" /> Remover
-    </Button>
   </div>
 ));
 
@@ -257,12 +259,10 @@ export const HealthPlanComparisonModal = ({
             <tbody className="bg-background divide-y divide-border">
               {Object.entries(groupedAttributes).map(([groupName, attrNames]) => (
                 <React.Fragment key={groupName}>
-                  <tr className="bg-muted/50">
-                    <th colSpan={plansToCompare.length + 1} className="p-0">
-                      <div className="px-4 py-2 font-bold text-primary text-left sticky-group-header border-b border-border">
-                        {groupName}
-                      </div>
-                    </th>
+                  <tr className="bg-muted/70">
+                    <td colSpan={plansToCompare.length + 1} className="px-4 py-3 font-bold text-primary text-center border-b border-border">
+                      {groupName}
+                    </td>
                   </tr>
                   
                   {attrNames.map((attrName, index) => (
