@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Grid3x3, List } from "lucide-react";
+import { Search, Grid3x3, List, Plus, Minus } from "lucide-react";
 import { QuoteModal } from "@/components/QuoteModal";
 import { FloatingQuoteButton } from "@/components/FloatingQuoteButton";
 import { useToast } from "@/hooks/use-toast";
@@ -10,11 +10,20 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface Attribute {
   name: string;
   value_name: string;
   attribute_group_name: string;
+}
+
+interface Clinica {
+  item_id: string;
+  nombre: string;
+  entity: string;
 }
 
 interface HealthPlan {
@@ -25,6 +34,7 @@ interface HealthPlan {
   rating: number;
   linea: string;
   attributes?: Attribute[];
+  clinicas?: Clinica[];
 }
 
 const Index = () => {
@@ -37,6 +47,9 @@ const Index = () => {
   const [healthPlans, setHealthPlans] = useState<HealthPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [selectedClinicas, setSelectedClinicas] = useState<Clinica[]>([]);
+  const [openClinicSearch, setOpenClinicSearch] = useState(false);
+  const [comparisonPlans, setComparisonPlans] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -59,15 +72,29 @@ const Index = () => {
   }, [toast]);
 
   const providers = Array.from(new Set(healthPlans.map(p => p.empresa)));
+  
+  // Extract all unique clinics from all plans
+  const allClinicas = healthPlans.reduce((acc: Clinica[], plan) => {
+    if (plan.clinicas) {
+      plan.clinicas.forEach(clinica => {
+        if (!acc.find(c => c.item_id === clinica.item_id)) {
+          acc.push(clinica);
+        }
+      });
+    }
+    return acc;
+  }, []);
 
   const filteredPlans = healthPlans.filter(plan => {
-    const matchesSearch = plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         plan.empresa.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesPrice = plan.price >= priceRange[0] && plan.price <= priceRange[1];
     const matchesProvider = selectedProviders.length === 0 || selectedProviders.includes(plan.empresa);
     const matchesRating = plan.rating >= minRating[0];
+    const matchesClinica = selectedClinicas.length === 0 || 
+      selectedClinicas.some(selectedClinica => 
+        plan.clinicas?.some(planClinica => planClinica.item_id === selectedClinica.item_id)
+      );
     
-    return matchesSearch && matchesPrice && matchesProvider && matchesRating;
+    return matchesPrice && matchesProvider && matchesRating && matchesClinica;
   });
 
   const toggleProvider = (provider: string) => {
@@ -75,6 +102,28 @@ const Index = () => {
       prev.includes(provider)
         ? prev.filter(p => p !== provider)
         : [...prev, provider]
+    );
+  };
+
+  const toggleClinica = (clinica: Clinica) => {
+    setSelectedClinicas(prev => {
+      const exists = prev.find(c => c.item_id === clinica.item_id);
+      if (exists) {
+        return prev.filter(c => c.item_id !== clinica.item_id);
+      }
+      return [...prev, clinica];
+    });
+  };
+
+  const removeClinica = (clinicaId: string) => {
+    setSelectedClinicas(prev => prev.filter(c => c.item_id !== clinicaId));
+  };
+
+  const toggleComparison = (planId: string) => {
+    setComparisonPlans(prev => 
+      prev.includes(planId) 
+        ? prev.filter(id => id !== planId)
+        : [...prev, planId]
     );
   };
 
@@ -143,13 +192,14 @@ const Index = () => {
             </div>
           </div>
 
-          <Button 
+            <Button 
             variant="outline" 
             className="w-full"
             onClick={() => {
               setPriceRange([0, 600]);
               setSelectedProviders([]);
               setMinRating([0]);
+              setSelectedClinicas([]);
             }}
           >
             Limpiar Filtros
@@ -161,14 +211,64 @@ const Index = () => {
           {/* Header */}
           <div className="bg-background rounded-lg border border-border p-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="relative flex-1 w-full md:max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar planes de salud..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9"
-                />
+              <div className="flex-1 w-full md:max-w-md">
+                <Popover open={openClinicSearch} onOpenChange={setOpenClinicSearch}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={openClinicSearch}
+                      className="w-full justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Search className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Buscar clínicas...</span>
+                      </div>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[400px] p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Buscar clínicas..." />
+                      <CommandList>
+                        <CommandEmpty>No se encontraron clínicas.</CommandEmpty>
+                        <CommandGroup>
+                          {allClinicas
+                            .filter(clinica => 
+                              !selectedClinicas.find(c => c.item_id === clinica.item_id)
+                            )
+                            .map((clinica) => (
+                            <CommandItem
+                              key={clinica.item_id}
+                              onSelect={() => {
+                                toggleClinica(clinica);
+                                setOpenClinicSearch(false);
+                              }}
+                            >
+                              {clinica.entity}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                
+                {/* Selected clinics badges */}
+                {selectedClinicas.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {selectedClinicas.map((clinica) => (
+                      <Badge
+                        key={clinica.item_id}
+                        variant="secondary"
+                        className="cursor-pointer"
+                        onClick={() => removeClinica(clinica.item_id)}
+                      >
+                        {clinica.entity}
+                        <span className="ml-1">×</span>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <RadioGroup
@@ -240,7 +340,17 @@ const Index = () => {
                     <div className="text-2xl font-bold text-primary">${plan.price}</div>
                     <div className="text-xs text-muted-foreground">por mes</div>
                   </div>
-                  <Button className="w-full">Ver Detalles</Button>
+                  <div className="flex gap-2 w-full">
+                    <Button 
+                      variant={comparisonPlans.includes(plan._id) ? "default" : "outline"}
+                      size="icon"
+                      onClick={() => toggleComparison(plan._id)}
+                      title={comparisonPlans.includes(plan._id) ? "Remover de comparación" : "Agregar a comparación"}
+                    >
+                      {comparisonPlans.includes(plan._id) ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                    </Button>
+                    <Button className="flex-1">Ver Detalles</Button>
+                  </div>
                 </CardFooter>
               </Card>
             ))}
