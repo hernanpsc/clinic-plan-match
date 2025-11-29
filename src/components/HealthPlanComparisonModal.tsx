@@ -148,11 +148,14 @@ export const HealthPlanComparisonModal = ({
     const comparingIds = new Set(plansToCompare.map(p => p._id));
     return allAvailablePlans
       .filter(plan => !comparingIds.has(plan._id))
-      .filter(plan => 
-        plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        plan.linea.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        plan.empresa.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      .filter(plan => {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          (plan.name?.toLowerCase() || '').includes(searchLower) ||
+          (plan.linea?.toLowerCase() || '').includes(searchLower) ||
+          (plan.empresa?.toLowerCase() || '').includes(searchLower)
+        );
+      });
   }, [allAvailablePlans, plansToCompare, searchTerm]);
   
   const groupedAttributes = useMemo(() => {
