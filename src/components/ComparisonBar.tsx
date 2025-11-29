@@ -19,10 +19,13 @@ interface HealthPlan {
 interface ComparisonBarProps {
   plans: HealthPlan[];
   onRemove: (planId: string) => void;
+  onCompare: () => void;
 }
 
-export const ComparisonBar = ({ plans, onRemove }: ComparisonBarProps) => {
+export const ComparisonBar = ({ plans, onRemove, onCompare }: ComparisonBarProps) => {
   if (plans.length === 0) return null;
+
+  const canCompare = plans.length >= 2 && plans.length <= 3;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg z-50 p-4">
@@ -31,9 +34,11 @@ export const ComparisonBar = ({ plans, onRemove }: ComparisonBarProps) => {
           <h3 className="text-lg font-semibold text-foreground">
             Planes para comparar ({plans.length})
           </h3>
-          <Button variant="outline" size="sm">
-            Comparar ahora
-          </Button>
+          {canCompare && (
+            <Button variant="default" size="sm" onClick={onCompare}>
+              Comparar ahora
+            </Button>
+          )}
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {plans.map((plan) => (
