@@ -330,12 +330,21 @@ const Index = () => {
               <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row" : ""}>
                 <div className="flex-1">
                   <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{plan.name}</CardTitle>
-                        <CardDescription>{plan.empresa}</CardDescription>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3 flex-1">
+                        {plan.images && plan.images[0] && (
+                          <img
+                            src={`/${plan.images[0].url}`}
+                            alt={plan.empresa}
+                            className="w-12 h-12 object-contain flex-shrink-0"
+                          />
+                        )}
+                        <div>
+                          <CardTitle className="text-lg">{plan.name}</CardTitle>
+                          <CardDescription>{plan.empresa}</CardDescription>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 bg-accent px-2 py-1 rounded">
+                      <div className="flex items-center gap-1 bg-accent px-2 py-1 rounded flex-shrink-0">
                         <span className="text-sm font-medium">⭐ {plan.rating}</span>
                       </div>
                     </div>
