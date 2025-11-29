@@ -35,6 +35,8 @@ interface Attribute {
   name: string;
   value_name: string;
   attribute_group_name: string;
+  attribute_name_order?: number | null;
+  attribute_group_order?: number | null;
 }
 
 interface HealthPlan {
@@ -161,40 +163,60 @@ export const HealthPlanComparisonModal = ({
   }, [allAvailablePlans, plansToCompare, searchTerm]);
   
   const groupedAttributes = useMemo(() => {
-    const uniqueAttributeNames: Record<string, Set<string>> = {};
+    // Recolectar atributos únicos con su información completa
+    // Solo toma el orden del primer atributo que encuentra
+    const uniqueAttrs = new Map<string, {
+      groupName: string;
+      groupOrder: number | null;
+      attrName: string;
+      attrOrder: number | null;
+    }>();
     
     plansToCompare.forEach(plan => {
       plan.attributes?.forEach(attr => {
-        // Usar el attribute_group_name directamente si existe, sino usar 'Otros Beneficios'
         const groupName = attr.attribute_group_name || 'Otros Beneficios';
-
-        if (!uniqueAttributeNames[groupName]) {
-          uniqueAttributeNames[groupName] = new Set();
+        const key = `${groupName}::${attr.name}`;
+        
+        // Solo guarda si no existe, así usa el orden del primer atributo encontrado
+        if (!uniqueAttrs.has(key)) {
+          uniqueAttrs.set(key, {
+            groupName,
+            groupOrder: attr.attribute_group_order ?? null,
+            attrName: attr.name,
+            attrOrder: attr.attribute_name_order ?? null
+          });
         }
-        uniqueAttributeNames[groupName].add(attr.name);
       });
     });
 
-    // Ordenar grupos: primero los definidos en ATTRIBUTE_GROUPS, luego otros alfabéticamente
-    const finalGroups: Record<string, string[]> = {};
-    const allGroupKeys = Object.keys(uniqueAttributeNames);
-    
-    // Primero agregar grupos predefinidos que existan
-    ATTRIBUTE_GROUPS.forEach(groupName => {
-      if (uniqueAttributeNames[groupName]) {
-        finalGroups[groupName] = Array.from(uniqueAttributeNames[groupName]);
+    // Ordenar: primero por grupo, luego por atributo
+    const sortedAttrs = Array.from(uniqueAttrs.values()).sort((a, b) => {
+      // Ordenar por grupo
+      if (a.groupOrder != null && b.groupOrder != null) {
+        if (a.groupOrder !== b.groupOrder) return a.groupOrder - b.groupOrder;
+      } else if (a.groupOrder != null) return -1;
+      else if (b.groupOrder != null) return 1;
+      else if (a.groupName !== b.groupName) {
+        return a.groupName.localeCompare(b.groupName);
       }
+      
+      // Ordenar por atributo dentro del grupo
+      if (a.attrOrder != null && b.attrOrder != null) {
+        return a.attrOrder - b.attrOrder;
+      } else if (a.attrOrder != null) return -1;
+      else if (b.attrOrder != null) return 1;
+      return a.attrName.localeCompare(b.attrName);
     });
-    
-    // Luego agregar otros grupos (excepto los ya agregados)
-    allGroupKeys
-      .filter(key => !ATTRIBUTE_GROUPS.includes(key))
-      .sort()
-      .forEach(groupName => {
-        finalGroups[groupName] = Array.from(uniqueAttributeNames[groupName]);
-      });
 
-    console.log('Grouped Attributes:', finalGroups);
+    // Agrupar resultado
+    const finalGroups: Record<string, string[]> = {};
+    sortedAttrs.forEach(attr => {
+      if (!finalGroups[attr.groupName]) {
+        finalGroups[attr.groupName] = [];
+      }
+      finalGroups[attr.groupName].push(attr.attrName);
+    });
+
     return finalGroups;
   }, [plansToCompare]);
 
