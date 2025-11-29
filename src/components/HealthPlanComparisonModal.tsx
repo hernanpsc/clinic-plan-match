@@ -163,78 +163,56 @@ export const HealthPlanComparisonModal = ({
   }, [allAvailablePlans, plansToCompare, searchTerm]);
   
   const groupedAttributes = useMemo(() => {
-    // Mapa para almacenar información completa de atributos
-    const attributeInfoMap = new Map<string, { name: string; order: number | null; groupOrder: number | null }>();
-    const groupOrderMap = new Map<string, number | null>();
+    // Recolectar atributos únicos con su información completa
+    const uniqueAttrs = new Map<string, {
+      groupName: string;
+      groupOrder: number | null;
+      attrName: string;
+      attrOrder: number | null;
+    }>();
     
     plansToCompare.forEach(plan => {
       plan.attributes?.forEach(attr => {
         const groupName = attr.attribute_group_name || 'Otros Beneficios';
-        const attrKey = `${groupName}::${attr.name}`;
+        const key = `${groupName}::${attr.name}`;
         
-        // Guardar info del atributo si no existe
-        if (!attributeInfoMap.has(attrKey)) {
-          attributeInfoMap.set(attrKey, {
-            name: attr.name,
-            order: attr.attribute_name_order ?? null,
-            groupOrder: attr.attribute_group_order ?? null
+        if (!uniqueAttrs.has(key)) {
+          uniqueAttrs.set(key, {
+            groupName,
+            groupOrder: attr.attribute_group_order ?? null,
+            attrName: attr.name,
+            attrOrder: attr.attribute_name_order ?? null
           });
         }
-        
-        // Guardar orden del grupo
-        if (!groupOrderMap.has(groupName) && attr.attribute_group_order != null) {
-          groupOrderMap.set(groupName, attr.attribute_group_order);
-        }
       });
     });
 
-    // Agrupar atributos
-    const groupsMap = new Map<string, Array<{ name: string; order: number | null }>>();
-    
-    attributeInfoMap.forEach((info, key) => {
-      const [groupName] = key.split('::');
-      if (!groupsMap.has(groupName)) {
-        groupsMap.set(groupName, []);
+    // Ordenar: primero por grupo, luego por atributo
+    const sortedAttrs = Array.from(uniqueAttrs.values()).sort((a, b) => {
+      // Ordenar por grupo
+      if (a.groupOrder != null && b.groupOrder != null) {
+        if (a.groupOrder !== b.groupOrder) return a.groupOrder - b.groupOrder;
+      } else if (a.groupOrder != null) return -1;
+      else if (b.groupOrder != null) return 1;
+      else if (a.groupName !== b.groupName) {
+        return a.groupName.localeCompare(b.groupName);
       }
-      groupsMap.get(groupName)!.push({ name: info.name, order: info.order });
-    });
-
-    // Ordenar grupos por attribute_group_order
-    const sortedGroups = Array.from(groupsMap.keys()).sort((a, b) => {
-      const orderA = groupOrderMap.get(a);
-      const orderB = groupOrderMap.get(b);
       
-      // Si ambos tienen orden, ordenar por orden
-      if (orderA != null && orderB != null) {
-        return orderA - orderB;
-      }
-      // Si solo uno tiene orden, ese va primero
-      if (orderA != null) return -1;
-      if (orderB != null) return 1;
-      // Si ninguno tiene orden, ordenar alfabéticamente
-      return a.localeCompare(b);
+      // Ordenar por atributo dentro del grupo
+      if (a.attrOrder != null && b.attrOrder != null) {
+        return a.attrOrder - b.attrOrder;
+      } else if (a.attrOrder != null) return -1;
+      else if (b.attrOrder != null) return 1;
+      return a.attrName.localeCompare(b.attrName);
     });
 
-    // Construir el objeto final con atributos ordenados dentro de cada grupo
+    // Agrupar resultado
     const finalGroups: Record<string, string[]> = {};
-    
-    sortedGroups.forEach(groupName => {
-      const attributes = groupsMap.get(groupName)!;
-      
-      // Ordenar atributos dentro del grupo por attribute_name_order
-      const sortedAttributes = attributes.sort((a, b) => {
-        // Si ambos tienen orden, ordenar por orden
-        if (a.order != null && b.order != null) {
-          return a.order - b.order;
-        }
-        // Si solo uno tiene orden, ese va primero
-        if (a.order != null) return -1;
-        if (b.order != null) return 1;
-        // Si ninguno tiene orden, ordenar alfabéticamente
-        return a.name.localeCompare(b.name);
-      });
-      
-      finalGroups[groupName] = sortedAttributes.map(attr => attr.name);
+    sortedAttrs.forEach(attr => {
+      if (!finalGroups[attr.groupName]) {
+        finalGroups[attr.groupName] = [];
+      }
+      finalGroups[attr.groupName].push(attr.attrName);
     });
 
     return finalGroups;
