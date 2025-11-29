@@ -1,416 +1,313 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Grid3x3, List, Plus, Minus } from "lucide-react";
-import FormQuote from "@/components/FormQuote";
-import { FloatingQuoteButton } from "@/components/FloatingQuoteButton";
-import { ComparisonBar } from "@/components/ComparisonBar";
-import { useToast } from "@/hooks/use-toast";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle, Search, FileCheck, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-
-interface Attribute {
-  name: string;
-  value_name: string;
-  attribute_group_name: string;
-}
-
-interface Clinica {
-  item_id: string;
-  nombre: string;
-  entity: string;
-}
-
-interface Image {
-  id: string;
-  descripcion: string;
-  empresa: string;
-  url: string;
-}
-
-interface HealthPlan {
-  _id: string;
-  name: string;
-  empresa: string;
-  price: number;
-  rating: number;
-  linea: string;
-  attributes?: Attribute[];
-  clinicas?: Clinica[];
-  images?: Image[];
-}
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Index = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [priceRange, setPriceRange] = useState([0, 600]);
-  const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
-  const [minRating, setMinRating] = useState([0]);
-  const [healthPlans, setHealthPlans] = useState<HealthPlan[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [formQuoteOpen, setFormQuoteOpen] = useState(false);
 
-  const [selectedClinicas, setSelectedClinicas] = useState<Clinica[]>([]);
-  const [openClinicSearch, setOpenClinicSearch] = useState(false);
-  const [comparisonPlans, setComparisonPlans] = useState<string[]>([]);
+  const providers = [
+    { name: "OSDE", logo: "/assets/images/card-header/osde.png" },
+    { name: "Swiss Medical", logo: "/assets/images/card-header/swissmedical.webp" },
+    { name: "Galeno", logo: "/assets/images/card-header/galeno.webp" },
+    { name: "Medifé", logo: "/assets/images/card-header/medife.webp" },
+    { name: "Omint", logo: "/assets/images/card-header/omint.webp" },
+    { name: "Sancor Salud", logo: "/assets/images/card-header/sancorsalud.webp" },
+  ];
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const response = await fetch('https://servidorplus.avalianonline.com.ar/planes');
-        const data = await response.json();
-        setHealthPlans(data);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "No se pudieron cargar los planes",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlans();
-  }, [toast]);
-
-  const providers = Array.from(new Set(healthPlans.map(p => p.empresa)));
-  
-  // Extract all unique clinics from all plans
-  const allClinicas = healthPlans.reduce((acc: Clinica[], plan) => {
-    if (plan.clinicas) {
-      plan.clinicas.forEach(clinica => {
-        if (!acc.find(c => c.item_id === clinica.item_id)) {
-          acc.push(clinica);
-        }
-      });
+  const testimonials = [
+    {
+      name: "María González",
+      text: "Encontré el plan perfecto para mi familia en minutos. La comparación fue muy clara y fácil de entender.",
+      avatar: "MG"
+    },
+    {
+      name: "Carlos Rodríguez",
+      text: "Excelente servicio. Pude comparar todas las opciones sin complicaciones y elegir la mejor prepaga para mí.",
+      avatar: "CR"
+    },
+    {
+      name: "Laura Fernández",
+      text: "Súper recomendable. Me ayudó a encontrar un plan con mejor cobertura y a un mejor precio.",
+      avatar: "LF"
     }
-    return acc;
-  }, []);
+  ];
 
-  const filteredPlans = healthPlans.filter(plan => {
-    const matchesPrice = plan.price >= priceRange[0] && plan.price <= priceRange[1];
-    const matchesProvider = selectedProviders.length === 0 || selectedProviders.includes(plan.empresa);
-    const matchesRating = plan.rating >= minRating[0];
-    const matchesClinica = selectedClinicas.length === 0 || 
-      selectedClinicas.some(selectedClinica => 
-        plan.clinicas?.some(planClinica => planClinica.item_id === selectedClinica.item_id)
-      );
-    
-    return matchesPrice && matchesProvider && matchesRating && matchesClinica;
-  });
-
-  const toggleProvider = (provider: string) => {
-    setSelectedProviders(prev =>
-      prev.includes(provider)
-        ? prev.filter(p => p !== provider)
-        : [...prev, provider]
-    );
-  };
-
-  const toggleClinica = (clinica: Clinica) => {
-    setSelectedClinicas(prev => {
-      const exists = prev.find(c => c.item_id === clinica.item_id);
-      if (exists) {
-        return prev.filter(c => c.item_id !== clinica.item_id);
-      }
-      return [...prev, clinica];
-    });
-  };
-
-  const removeClinica = (clinicaId: string) => {
-    setSelectedClinicas(prev => prev.filter(c => c.item_id !== clinicaId));
-  };
-
-  const toggleComparison = (planId: string) => {
-    setComparisonPlans(prev => 
-      prev.includes(planId) 
-        ? prev.filter(id => id !== planId)
-        : [...prev, planId]
-    );
-  };
-
-  const comparisonPlansList = healthPlans.filter(plan => 
-    comparisonPlans.includes(plan._id)
-  );
-
-  const handleCompare = () => {
-    // Store comparison data in sessionStorage to pass to comparison page
-    sessionStorage.setItem('comparisonPlans', JSON.stringify(comparisonPlansList));
-    sessionStorage.setItem('allPlans', JSON.stringify(healthPlans));
-    navigate('/comparar');
-  };
+  const faqs = [
+    {
+      question: "¿Cómo funciona el comparador de planes?",
+      answer: "Nuestro comparador te permite ver todos los planes de salud disponibles, filtrarlos por precio, cobertura y clínicas, y compararlos lado a lado para tomar la mejor decisión."
+    },
+    {
+      question: "¿Es gratis usar el servicio?",
+      answer: "Sí, nuestro servicio de comparación es completamente gratuito. No hay cargos ocultos ni comisiones."
+    },
+    {
+      question: "¿Qué prepagas puedo comparar?",
+      answer: "Trabajamos con las principales prepagas de Argentina: OSDE, Swiss Medical, Galeno, Medifé, Omint, Sancor Salud, y muchas más."
+    },
+    {
+      question: "¿Puedo cambiar de prepaga en cualquier momento?",
+      answer: "Sí, podés cambiar de prepaga cuando lo desees, aunque algunos planes pueden tener períodos de carencia para ciertas prestaciones."
+    },
+    {
+      question: "¿Cómo sé qué plan me conviene?",
+      answer: "Podés usar nuestros filtros para comparar precios, coberturas, y clínicas disponibles. También podés ver los beneficios detallados de cada plan."
+    },
+    {
+      question: "¿Los precios están actualizados?",
+      answer: "Sí, actualizamos los precios regularmente para asegurarnos de que tengas la información más reciente."
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-secondary/30">
-      <FloatingQuoteButton onClick={() => setFormQuoteOpen(true)} />
-      
-      <Dialog open={formQuoteOpen} onOpenChange={setFormQuoteOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 gap-0">
-          <div className="w-full h-full">
-            <FormQuote />
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <ComparisonBar 
-        plans={comparisonPlansList}
-        onRemove={toggleComparison}
-        onCompare={handleCompare}
-        isComparisonModalOpen={false}
-      />
-      
-      <div className="flex">
-        {/* Sidebar de Filtros */}
-        <aside className="w-80 bg-background border-r border-border p-6 sticky top-0 h-screen overflow-y-auto">
-          <h2 className="text-xl font-semibold mb-6 text-foreground">Filtros</h2>
-          
-          {/* Rango de Precio */}
-          <div className="mb-8">
-            <Label className="text-sm font-medium mb-3 block">Rango de Precio</Label>
-            <Slider
-              min={0}
-              max={600}
-              step={10}
-              value={priceRange}
-              onValueChange={setPriceRange}
-              className="mb-2"
-            />
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>${priceRange[0]}</span>
-              <span>${priceRange[1]}</span>
-            </div>
-          </div>
-
-          {/* Proveedores */}
-          <div className="mb-8">
-            <Label className="text-sm font-medium mb-3 block">Proveedores</Label>
-            <div className="space-y-3">
-              {providers.map(provider => (
-                <div key={provider} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={provider}
-                    checked={selectedProviders.includes(provider)}
-                    onCheckedChange={() => toggleProvider(provider)}
-                  />
-                  <label
-                    htmlFor={provider}
-                    className="text-sm text-foreground cursor-pointer"
-                  >
-                    {provider}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Rating Mínimo */}
-          <div className="mb-8">
-            <Label className="text-sm font-medium mb-3 block">Calificación Mínima</Label>
-            <Slider
-              min={0}
-              max={5}
-              step={0.5}
-              value={minRating}
-              onValueChange={setMinRating}
-              className="mb-2"
-            />
-            <div className="text-sm text-muted-foreground">
-              {minRating[0]} estrellas o más
-            </div>
-          </div>
-
-            <Button 
-            variant="outline" 
-            className="w-full"
-            onClick={() => {
-              setPriceRange([0, 600]);
-              setSelectedProviders([]);
-              setMinRating([0]);
-              setSelectedClinicas([]);
-            }}
-          >
-            Limpiar Filtros
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <img 
+            src="/src/assets/images/logos/logo-header-tr.png" 
+            alt="Logo" 
+            className="h-10 hidden md:block"
+          />
+          <img 
+            src="/src/assets/images/logos/logo-header-tr-mobile.png" 
+            alt="Logo" 
+            className="h-10 md:hidden"
+          />
+          <Button onClick={() => navigate('/resultados')}>
+            Ver Planes
           </Button>
-        </aside>
+        </div>
+      </header>
 
-        {/* Contenido Principal */}
-        <main className="flex-1 p-6">
-          {/* Header */}
-          <div className="bg-background rounded-lg border border-border p-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="flex-1 w-full md:max-w-md">
-                <Popover open={openClinicSearch} onOpenChange={setOpenClinicSearch}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openClinicSearch}
-                      className="w-full justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Search className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Buscar clínicas...</span>
+      {/* Hero Section */}
+      <section className="py-20 md:py-32 px-4 bg-gradient-to-b from-secondary/30 to-background">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
+                Encontrá el plan de salud perfecto para vos
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8">
+                Compará planes de las mejores prepagas de Argentina y elegí el que mejor se adapte a tus necesidades.
+              </p>
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6"
+                onClick={() => navigate('/resultados')}
+              >
+                Cotizar ahora
+              </Button>
+            </div>
+            <div className="relative">
+              <div className="bg-muted rounded-lg shadow-2xl border border-border overflow-hidden">
+                <div className="bg-accent p-3 border-b border-border flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-destructive"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div className="p-8 space-y-4">
+                  <div className="h-4 bg-primary/20 rounded w-3/4"></div>
+                  <div className="h-4 bg-primary/10 rounded w-1/2"></div>
+                  <div className="grid grid-cols-3 gap-4 mt-6">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="bg-card p-4 rounded-lg border border-border">
+                        <div className="h-12 w-12 bg-primary/20 rounded mb-2"></div>
+                        <div className="h-3 bg-muted rounded w-full mb-2"></div>
+                        <div className="h-3 bg-muted rounded w-2/3"></div>
                       </div>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0" align="start">
-                    <Command>
-                      <CommandInput placeholder="Buscar clínicas..." />
-                      <CommandList>
-                        <CommandEmpty>No se encontraron clínicas.</CommandEmpty>
-                        <CommandGroup>
-                          {allClinicas
-                            .filter(clinica => 
-                              !selectedClinicas.find(c => c.item_id === clinica.item_id)
-                            )
-                            .map((clinica) => (
-                            <CommandItem
-                              key={clinica.item_id}
-                              onSelect={() => {
-                                toggleClinica(clinica);
-                                setOpenClinicSearch(false);
-                              }}
-                            >
-                              {clinica.entity}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                
-                {/* Selected clinics badges */}
-                {selectedClinicas.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {selectedClinicas.map((clinica) => (
-                      <Badge
-                        key={clinica.item_id}
-                        variant="secondary"
-                        className="cursor-pointer"
-                        onClick={() => removeClinica(clinica.item_id)}
-                      >
-                        {clinica.entity}
-                        <span className="ml-1">×</span>
-                      </Badge>
                     ))}
                   </div>
-                )}
+                </div>
               </div>
-
-              <RadioGroup
-                value={viewMode}
-                onValueChange={(value) => setViewMode(value as "grid" | "list")}
-                className="flex gap-2"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="grid" id="grid" />
-                  <Label htmlFor="grid" className="cursor-pointer flex items-center gap-1">
-                    <Grid3x3 className="h-4 w-4" />
-                    Grid
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="list" id="list" />
-                  <Label htmlFor="list" className="cursor-pointer flex items-center gap-1">
-                    <List className="h-4 w-4" />
-                    Lista
-                  </Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="mt-3 text-sm text-muted-foreground">
-              {filteredPlans.length} planes encontrados
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Cards Grid/List */}
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Cargando planes...</p>
-            </div>
-          ) : (
-            <div className={
-              viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                : "flex flex-col gap-4"
-            }>
-            {filteredPlans.map(plan => (
-              <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row" : ""}>
-                <div className="flex-1">
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-start gap-3 flex-1">
-                        {plan.images && plan.images[0] && (
-                          <img
-                            src={`/${plan.images[0].url}`}
-                            alt={plan.empresa}
-                            className="w-12 h-12 object-contain flex-shrink-0"
-                          />
-                        )}
-                        <div>
-                          <CardTitle className="text-lg">{plan.name}</CardTitle>
-                          <CardDescription>{plan.empresa}</CardDescription>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 bg-accent px-2 py-1 rounded flex-shrink-0">
-                        <span className="text-sm font-medium">⭐ {plan.rating}</span>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-3">{plan.linea}</p>
-                    <ul className="space-y-1">
-                      {plan.attributes?.slice(0, 4).map((attr, idx) => (
-                        <li key={`${plan._id}-attr-${idx}`} className="text-sm flex items-center gap-2">
-                          <span className="text-primary">✓</span>
-                          <span className="font-medium">{attr.name}:</span> {attr.value_name}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
+      {/* Cómo funciona */}
+      <section className="py-20 px-4 bg-background">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
+            ¿Cómo funciona?
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            En solo tres simples pasos podés encontrar el plan ideal
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Search className="w-8 h-8 text-primary" />
                 </div>
-                <CardFooter className={`flex ${viewMode === "list" ? "md:flex-col md:justify-center md:items-end md:min-w-[200px]" : "flex-col"} gap-3`}>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">${plan.price}</div>
-                    <div className="text-xs text-muted-foreground">por mes</div>
+                <CardTitle>1. Explorá</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Navegá por todos los planes disponibles y filtrá por precio, cobertura y clínicas
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <FileCheck className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle>2. Compará</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Seleccioná hasta 3 planes y comparalos lado a lado para ver diferencias
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Award className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle>3. Elegí</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Tomá la mejor decisión con toda la información a tu alcance
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Grid de Logos */}
+      <section className="py-20 px-4 bg-secondary/30">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
+            Prepagas destacadas
+          </h2>
+          <p className="text-center text-muted-foreground mb-12">
+            Trabajamos con las mejores prepagas de Argentina
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {providers.map((provider) => (
+              <div
+                key={provider.name}
+                className="bg-background rounded-lg p-6 flex items-center justify-center border border-border hover:shadow-lg transition-shadow"
+              >
+                <img
+                  src={provider.logo}
+                  alt={provider.name}
+                  className="max-h-12 max-w-full object-contain"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 px-4 bg-background">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
+            Lo que dicen nuestros usuarios
+          </h2>
+          <p className="text-center text-muted-foreground mb-12">
+            Miles de personas ya encontraron su plan ideal
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, idx) => (
+              <Card key={idx}>
+                <CardHeader>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">{testimonial.name}</CardTitle>
+                    </div>
                   </div>
-                  <div className="flex gap-2 w-full">
-                    <Button 
-                      variant={comparisonPlans.includes(plan._id) ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => toggleComparison(plan._id)}
-                      title={comparisonPlans.includes(plan._id) ? "Remover de comparación" : "Agregar a comparación"}
-                    >
-                      {comparisonPlans.includes(plan._id) ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                    </Button>
-                    <Button className="flex-1">Ver Detalles</Button>
-                  </div>
-                </CardFooter>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">"{testimonial.text}"</p>
+                  <div className="mt-4 text-yellow-500">★★★★★</div>
+                </CardContent>
               </Card>
             ))}
-            </div>
-          )}
+          </div>
+        </div>
+      </section>
 
-          {!loading && filteredPlans.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No se encontraron planes con los filtros seleccionados</p>
+      {/* FAQ */}
+      <section className="py-20 px-4 bg-secondary/30">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
+            Preguntas frecuentes
+          </h2>
+          <p className="text-center text-muted-foreground mb-12">
+            Respondemos tus dudas sobre planes de salud
+          </p>
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, idx) => (
+              <AccordionItem key={idx} value={`item-${idx}`}>
+                <AccordionTrigger className="text-left">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-foreground text-background py-12 px-4">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <img 
+                src="/src/assets/images/logos/logo-footer.gif" 
+                alt="Logo" 
+                className="h-10 mb-4"
+              />
+              <p className="text-sm opacity-80">
+                Tu comparador de confianza para encontrar el mejor plan de salud.
+              </p>
             </div>
-          )}
-        </main>
-      </div>
+            <div>
+              <h3 className="font-semibold mb-4">Empresa</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li><a href="#" className="hover:opacity-100">Sobre nosotros</a></li>
+                <li><a href="#" className="hover:opacity-100">Contacto</a></li>
+                <li><a href="#" className="hover:opacity-100">Trabaja con nosotros</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li><a href="#" className="hover:opacity-100">Términos y condiciones</a></li>
+                <li><a href="#" className="hover:opacity-100">Política de privacidad</a></li>
+                <li><a href="#" className="hover:opacity-100">Cookies</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Ayuda</h3>
+              <ul className="space-y-2 text-sm opacity-80">
+                <li><a href="#" className="hover:opacity-100">Centro de ayuda</a></li>
+                <li><a href="#" className="hover:opacity-100">Preguntas frecuentes</a></li>
+                <li><a href="#" className="hover:opacity-100">Soporte</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-background/20 pt-8 text-center text-sm opacity-80">
+            <p>© {new Date().getFullYear()} Comparador de Planes de Salud. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
