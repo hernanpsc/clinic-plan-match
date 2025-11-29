@@ -138,8 +138,8 @@ export const ComparisonPage = ({
   const [internalAllPlans, setInternalAllPlans] = useState<HealthPlan[]>([]);
   
   // Use props if provided, otherwise use internal state from sessionStorage
-  const plansToCompare = propPlansToCompare || internalPlansToCompare;
-  const allAvailablePlans = propAllAvailablePlans || internalAllPlans;
+  const plansToCompare = (propPlansToCompare && propPlansToCompare.length > 0) ? propPlansToCompare : internalPlansToCompare;
+  const allAvailablePlans = (propAllAvailablePlans && propAllAvailablePlans.length > 0) ? propAllAvailablePlans : internalAllPlans;
   
   useEffect(() => {
     // Load data from sessionStorage if not provided via props
@@ -147,11 +147,17 @@ export const ComparisonPage = ({
       const storedComparisonPlans = sessionStorage.getItem('comparisonPlans');
       const storedAllPlans = sessionStorage.getItem('allPlans');
       
+      console.log('Loading from sessionStorage:', { storedComparisonPlans, storedAllPlans });
+      
       if (storedComparisonPlans && storedAllPlans) {
         try {
-          setInternalPlansToCompare(JSON.parse(storedComparisonPlans));
-          setInternalAllPlans(JSON.parse(storedAllPlans));
+          const parsedComparisonPlans = JSON.parse(storedComparisonPlans);
+          const parsedAllPlans = JSON.parse(storedAllPlans);
+          console.log('Parsed data:', { parsedComparisonPlans, parsedAllPlans });
+          setInternalPlansToCompare(parsedComparisonPlans);
+          setInternalAllPlans(parsedAllPlans);
         } catch (error) {
+          console.error('Error parsing sessionStorage:', error);
           toast({
             title: "Error",
             description: "No se pudieron cargar los planes de comparación",
@@ -160,6 +166,7 @@ export const ComparisonPage = ({
           navigate('/');
         }
       } else {
+        console.log('No data in sessionStorage, redirecting to home');
         navigate('/');
       }
     }
@@ -544,7 +551,7 @@ export const ComparisonPage = ({
   return (
     <div className="min-h-screen w-full flex flex-col bg-background">
       <header className="w-full p-4 border-b border-border flex items-center gap-4 bg-background shrink-0">
-        <Button variant="outline" onClick={() => navigate(-1)}>
+        <Button variant="outline" onClick={() => navigate('/')}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver
         </Button>
