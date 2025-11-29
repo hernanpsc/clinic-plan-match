@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -497,36 +498,40 @@ export const HealthPlanComparisonModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] p-0 flex flex-col">
-        <DialogHeader className="px-6 py-4 border-b shrink-0">
-          <DialogTitle>Comparación Eficiente de Planes de Salud</DialogTitle>
+      <DialogContent className="max-w-[95vw] w-[95vw] h-[90vh] p-0 flex flex-col bg-background">
+        <DialogHeader className="px-6 py-4 border-b border-border shrink-0 bg-background">
+          <DialogTitle className="text-2xl font-bold">Comparación Eficiente de Planes de Salud</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            Compara hasta 4 planes de salud lado a lado. Revisa beneficios, cartilla médica y agrega nuevos planes.
+          </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 min-h-0">
-          <div className="px-6 pt-4 shrink-0">
-            <TabsList className="w-full justify-start">
-              <TabsTrigger value="beneficios">
+        <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 min-h-0 bg-background">
+          <div className="px-6 pt-4 shrink-0 bg-background">
+            <TabsList className="w-full justify-start bg-muted">
+              <TabsTrigger value="beneficios" className="data-[state=active]:bg-background">
                 Beneficios
               </TabsTrigger>
-              <TabsTrigger value="clinicas">
+              <TabsTrigger value="clinicas" className="data-[state=active]:bg-background">
                 Clínicas y Red
               </TabsTrigger>
-              <TabsTrigger value="add">
+              <TabsTrigger value="add" className="data-[state=active]:bg-background">
+                <Plus className="w-4 h-4 mr-1" />
                 Añadir Plan
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <TabsContent value="beneficios" className="h-full m-0 data-[state=active]:flex data-[state=active]:flex-col">
+          <div className="flex-1 min-h-0 overflow-hidden bg-background">
+            <TabsContent value="beneficios" className="h-full m-0 p-0 data-[state=active]:flex data-[state=active]:flex-col bg-background">
               {renderBeneficiosTable()}
             </TabsContent>
 
-            <TabsContent value="clinicas" className="h-full m-0 data-[state=active]:flex data-[state=active]:flex-col">
+            <TabsContent value="clinicas" className="h-full m-0 p-0 data-[state=active]:flex data-[state=active]:flex-col bg-background">
               {renderClinicasContent()}
             </TabsContent>
 
-            <TabsContent value="add" className="h-full m-0 p-6 data-[state=active]:flex data-[state=active]:flex-col">
+            <TabsContent value="add" className="h-full m-0 p-6 data-[state=active]:flex data-[state=active]:flex-col bg-background">
               {renderAddPlanTab()}
             </TabsContent>
           </div>
