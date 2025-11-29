@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Grid3x3, List, Plus, Minus } from "lucide-react";
 import { QuoteModal } from "@/components/QuoteModal";
 import { FloatingQuoteButton } from "@/components/FloatingQuoteButton";
+import { ComparisonBar } from "@/components/ComparisonBar";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +27,13 @@ interface Clinica {
   entity: string;
 }
 
+interface Image {
+  id: string;
+  descripcion: string;
+  empresa: string;
+  url: string;
+}
+
 interface HealthPlan {
   _id: string;
   name: string;
@@ -35,6 +43,7 @@ interface HealthPlan {
   linea: string;
   attributes?: Attribute[];
   clinicas?: Clinica[];
+  images?: Image[];
 }
 
 const Index = () => {
@@ -127,10 +136,18 @@ const Index = () => {
     );
   };
 
+  const comparisonPlansList = healthPlans.filter(plan => 
+    comparisonPlans.includes(plan._id)
+  );
+
   return (
     <div className="min-h-screen bg-secondary/30">
       <FloatingQuoteButton onClick={() => setQuoteModalOpen(true)} />
       <QuoteModal open={quoteModalOpen} onOpenChange={setQuoteModalOpen} />
+      <ComparisonBar 
+        plans={comparisonPlansList}
+        onRemove={toggleComparison}
+      />
       
       <div className="flex">
         {/* Sidebar de Filtros */}
