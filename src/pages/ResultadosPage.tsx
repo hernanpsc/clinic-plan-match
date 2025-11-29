@@ -152,7 +152,7 @@ const ResultadosPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/30">
+    <div className="min-h-screen bg-background">
       <FloatingQuoteButton onClick={() => setFormQuoteOpen(true)} />
       
       <Dialog open={formQuoteOpen} onOpenChange={setFormQuoteOpen}>
@@ -170,10 +170,48 @@ const ResultadosPage = () => {
         isComparisonModalOpen={false}
       />
       
-      <div className="flex">
-        {/* Sidebar de Filtros */}
-        <aside className="w-80 bg-background border-r border-border p-6 sticky top-0 h-screen overflow-y-auto">
-          <h2 className="text-xl font-semibold mb-6 text-foreground">Filtros</h2>
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/20 border-b border-border">
+        <div className="container mx-auto px-6 py-12 lg:py-16">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
+            <div className="space-y-4">
+              <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
+                Encontrá el plan perfecto
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Compará cobertura, precio y beneficios de los mejores planes de salud
+              </p>
+              <div className="flex gap-3 text-sm text-muted-foreground">
+                <Badge variant="secondary">{healthPlans.length} planes disponibles</Badge>
+                <Badge variant="secondary">{providers.length} prepagas</Badge>
+              </div>
+            </div>
+            <div className="relative h-64 lg:h-80 rounded-xl overflow-hidden shadow-2xl border border-border bg-muted/30">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
+                <div className="text-center text-muted-foreground p-8">
+                  <Search className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-sm">Comparador inteligente de planes de salud</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Info Bar */}
+      <div className="bg-muted/30 border-b border-border">
+        <div className="container mx-auto px-6 py-4">
+          <p className="text-sm text-center text-muted-foreground">
+            🔍 Usá los filtros para encontrar el plan ideal para vos y tu familia
+          </p>
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-[320px_1fr] gap-6">
+          {/* Sidebar de Filtros */}
+          <aside className="bg-card border border-border rounded-xl p-6 h-fit lg:sticky lg:top-6 shadow-sm">
+            <h2 className="text-xl font-semibold mb-6 text-foreground">Filtros</h2>
           
           {/* Rango de Precio */}
           <div className="mb-8">
@@ -231,23 +269,23 @@ const ResultadosPage = () => {
           </div>
 
             <Button 
-            variant="outline" 
-            className="w-full"
-            onClick={() => {
-              setPriceRange([0, 600]);
-              setSelectedProviders([]);
-              setMinRating([0]);
-              setSelectedClinicas([]);
-            }}
-          >
-            Limpiar Filtros
-          </Button>
-        </aside>
+              variant="outline" 
+              className="w-full mt-2"
+              onClick={() => {
+                setPriceRange([0, 600]);
+                setSelectedProviders([]);
+                setMinRating([0]);
+                setSelectedClinicas([]);
+              }}
+            >
+              Limpiar Filtros
+            </Button>
+          </aside>
 
-        {/* Contenido Principal */}
-        <main className="flex-1 p-6">
-          {/* Header */}
-          <div className="bg-background rounded-lg border border-border p-4 mb-6">
+          {/* Contenido Principal */}
+          <main className="flex-1 space-y-6">
+            {/* Header */}
+            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="flex-1 w-full md:max-w-md">
                 <Popover open={openClinicSearch} onOpenChange={setOpenClinicSearch}>
@@ -331,22 +369,22 @@ const ResultadosPage = () => {
               </RadioGroup>
             </div>
 
-            <div className="mt-3 text-sm text-muted-foreground">
-              {filteredPlans.length} planes encontrados
+              <div className="mt-3 text-sm text-muted-foreground">
+                {filteredPlans.length} planes encontrados
+              </div>
             </div>
-          </div>
 
-          {/* Cards Grid/List */}
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Cargando planes...</p>
-            </div>
-          ) : (
-            <div className={
-              viewMode === "grid"
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                : "flex flex-col gap-4"
-            }>
+            {/* Cards Grid/List */}
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Cargando planes...</p>
+              </div>
+            ) : (
+              <div className={
+                viewMode === "grid"
+                  ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                  : "flex flex-col gap-4"
+              }>
             {filteredPlans.map(plan => (
               <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row" : ""}>
                 <div className="flex-1">
@@ -404,13 +442,83 @@ const ResultadosPage = () => {
             </div>
           )}
 
-          {!loading && filteredPlans.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No se encontraron planes con los filtros seleccionados</p>
-            </div>
-          )}
-        </main>
+            {!loading && filteredPlans.length === 0 && (
+              <div className="text-center py-12 bg-card border border-border rounded-xl p-8">
+                <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">No se encontraron planes con los filtros seleccionados</p>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
+
+      {/* Additional Sections */}
+      <div className="bg-muted/30 border-t border-border">
+        <div className="container mx-auto px-6 py-16">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="space-y-3">
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <Search className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground">Búsqueda inteligente</h3>
+              <p className="text-sm text-muted-foreground">Filtrá por precio, cobertura, clínicas y más</p>
+            </div>
+            <div className="space-y-3">
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <Grid3x3 className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground">Comparación fácil</h3>
+              <p className="text-sm text-muted-foreground">Compará hasta 4 planes lado a lado</p>
+            </div>
+            <div className="space-y-3">
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <Plus className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground">Cotización gratuita</h3>
+              <p className="text-sm text-muted-foreground">Solicitá tu cotización sin compromiso</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-card border-t border-border">
+        <div className="container mx-auto px-6 py-12">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div className="space-y-4">
+              <h4 className="font-semibold text-foreground">Comparador de Planes</h4>
+              <p className="text-sm text-muted-foreground">
+                La forma más simple de encontrar tu plan de salud ideal
+              </p>
+            </div>
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground text-sm">Empresa</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Sobre nosotros</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Contacto</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Trabaja con nosotros</a></li>
+              </ul>
+            </div>
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground text-sm">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Términos y condiciones</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Política de privacidad</a></li>
+              </ul>
+            </div>
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground text-sm">Ayuda</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Preguntas frecuentes</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Cómo funciona</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} Comparador de Planes de Salud. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

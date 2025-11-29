@@ -550,44 +550,107 @@ export const ComparisonPage = ({
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-background">
-      <header className="w-full p-4 border-b border-border flex items-center gap-4 bg-background shrink-0">
-        <Button variant="outline" onClick={() => navigate('/')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver
-        </Button>
-        <h1 className="text-xl font-bold">Comparación de Planes de Salud</h1>
-      </header>
-
-      <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 min-h-0 bg-background">
-        <div className="px-6 pt-4 shrink-0 bg-background">
-          <TabsList className="w-full justify-start bg-muted">
-            <TabsTrigger value="beneficios" className="data-[state=active]:bg-background">
-              Beneficios
-            </TabsTrigger>
-            <TabsTrigger value="clinicas" className="data-[state=active]:bg-background">
-              Clínicas y Red
-            </TabsTrigger>
-            <TabsTrigger value="add" className="data-[state=active]:bg-background">
-              <Plus className="w-4 h-4 mr-1" />
-              Añadir Plan
-            </TabsTrigger>
-          </TabsList>
+      {/* Hero Header */}
+      <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/20 border-b border-border">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/resultados')}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver a resultados
+            </Button>
+          </div>
+          <div className="space-y-3">
+            <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
+              Comparación de Planes
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Compará en detalle los beneficios, cartilla médica y coberturas de cada plan
+            </p>
+            <div className="flex gap-3">
+              <Badge variant="secondary">{plansToCompare.length} planes seleccionados</Badge>
+              <Badge variant="outline">Máximo 4 planes</Badge>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div className="flex-1 min-h-0 overflow-hidden bg-background">
-          <TabsContent value="beneficios" className="h-full m-0 p-0 data-[state=active]:flex data-[state=active]:flex-col bg-background">
-            {renderBeneficiosTable()}
-          </TabsContent>
+      <div className="flex-1 bg-background">
+        <div className="container mx-auto px-6 py-8">
+          <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="w-full justify-start bg-muted/30 p-1 rounded-xl">
+              <TabsTrigger value="beneficios" className="rounded-lg">
+                Beneficios
+              </TabsTrigger>
+              <TabsTrigger value="clinicas" className="rounded-lg">
+                Clínicas y Red
+              </TabsTrigger>
+              <TabsTrigger value="add" className="rounded-lg flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Añadir Plan
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="clinicas" className="h-full m-0 p-0 data-[state=active]:flex data-[state=active]:flex-col bg-background">
-            {renderClinicasContent()}
-          </TabsContent>
+            <TabsContent value="beneficios" className="mt-0 bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+              <div className="max-h-[600px] overflow-auto">
+                {renderBeneficiosTable()}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="add" className="h-full m-0 p-6 data-[state=active]:flex data-[state=active]:flex-col bg-background">
-            {renderAddPlanTab()}
-          </TabsContent>
+            <TabsContent value="clinicas" className="mt-0 bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+              <div className="max-h-[600px] overflow-auto">
+                {renderClinicasContent()}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="add" className="mt-0">
+              {renderAddPlanTab()}
+            </TabsContent>
+          </Tabs>
         </div>
-      </Tabs>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-card border-t border-border mt-auto">
+        <div className="container mx-auto px-6 py-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-6">
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground">Comparador de Planes</h4>
+              <p className="text-sm text-muted-foreground">
+                La forma más simple de encontrar tu plan de salud ideal
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-foreground text-sm">Empresa</h4>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Sobre nosotros</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Contacto</a></li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-foreground text-sm">Legal</h4>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Términos y condiciones</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Política de privacidad</a></li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-foreground text-sm">Ayuda</h4>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground transition-colors">Preguntas frecuentes</a></li>
+                <li><a href="#" className="hover:text-foreground transition-colors">Cómo funciona</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border pt-6 text-center text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} Comparador de Planes de Salud. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
