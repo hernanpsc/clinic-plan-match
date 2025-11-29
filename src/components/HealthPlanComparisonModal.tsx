@@ -165,9 +165,8 @@ export const HealthPlanComparisonModal = ({
     
     plansToCompare.forEach(plan => {
       plan.attributes?.forEach(attr => {
-        const groupName = attr.attribute_group_name && ATTRIBUTE_GROUPS.includes(attr.attribute_group_name) 
-                          ? attr.attribute_group_name 
-                          : 'Otros Beneficios';
+        // Usar el attribute_group_name directamente si existe, sino usar 'Otros Beneficios'
+        const groupName = attr.attribute_group_name || 'Otros Beneficios';
 
         if (!uniqueAttributeNames[groupName]) {
           uniqueAttributeNames[groupName] = new Set();
@@ -176,15 +175,26 @@ export const HealthPlanComparisonModal = ({
       });
     });
 
+    // Ordenar grupos: primero los definidos en ATTRIBUTE_GROUPS, luego otros alfabéticamente
     const finalGroups: Record<string, string[]> = {};
-    const sortedGroupKeys = [...ATTRIBUTE_GROUPS, 'Otros Beneficios'].filter(key => uniqueAttributeNames[key]);
-
-    for (const groupName of sortedGroupKeys) {
+    const allGroupKeys = Object.keys(uniqueAttributeNames);
+    
+    // Primero agregar grupos predefinidos que existan
+    ATTRIBUTE_GROUPS.forEach(groupName => {
       if (uniqueAttributeNames[groupName]) {
         finalGroups[groupName] = Array.from(uniqueAttributeNames[groupName]);
       }
-    }
+    });
+    
+    // Luego agregar otros grupos (excepto los ya agregados)
+    allGroupKeys
+      .filter(key => !ATTRIBUTE_GROUPS.includes(key))
+      .sort()
+      .forEach(groupName => {
+        finalGroups[groupName] = Array.from(uniqueAttributeNames[groupName]);
+      });
 
+    console.log('Grouped Attributes:', finalGroups);
     return finalGroups;
   }, [plansToCompare]);
 
