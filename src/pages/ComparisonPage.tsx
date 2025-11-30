@@ -552,7 +552,7 @@ export const ComparisonPage = ({
   return (
     <div className="min-h-screen w-full flex flex-col bg-background">
       <Helmet>
-        <title>Comparar Planes de Salud | {plansToCompare.length} Planes Seleccionados</title>
+        <title>{`Comparar Planes de Salud | ${plansToCompare.length} Planes Seleccionados`}</title>
         <meta name="description" content={`Compará lado a lado ${plansToCompare.length} planes de salud. Analizá beneficios, coberturas, cartilla médica y precios para tomar la mejor decisión.`} />
         <meta name="keywords" content="comparar planes de salud, comparador prepagas, beneficios planes médicos, cartilla médica" />
         <link rel="canonical" href="https://tudominio.com/comparar" />
