@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Grid3x3, List, Plus, Minus } from "lucide-react";
+import { Search, Grid3x3, List, Plus, Minus, Filter, X, ChevronDown } from "lucide-react";
 import FormQuote from "@/components/FormQuote";
 import { FloatingQuoteButton } from "@/components/FloatingQuoteButton";
 import { ComparisonBar } from "@/components/ComparisonBar";
@@ -15,7 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Attribute {
   name: string;
@@ -59,6 +61,10 @@ const ResultadosPage = () => {
   const [healthPlans, setHealthPlans] = useState<HealthPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [formQuoteOpen, setFormQuoteOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<string>("default");
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<HealthPlan | null>(null);
 
   const [selectedClinicas, setSelectedClinicas] = useState<Clinica[]>([]);
   const [openClinicSearch, setOpenClinicSearch] = useState(false);
@@ -110,6 +116,20 @@ const ResultadosPage = () => {
     return matchesPrice && matchesProvider && matchesRating && matchesClinica;
   });
 
+  // Sort filtered plans
+  const sortedPlans = [...filteredPlans].sort((a, b) => {
+    switch (sortBy) {
+      case "price-asc":
+        return a.price - b.price;
+      case "price-desc":
+        return b.price - a.price;
+      case "name-asc":
+        return a.empresa.localeCompare(b.empresa);
+      default:
+        return 0;
+    }
+  });
+
   const toggleProvider = (provider: string) => {
     setSelectedProviders(prev =>
       prev.includes(provider)
@@ -150,6 +170,86 @@ const ResultadosPage = () => {
     sessionStorage.setItem('allPlans', JSON.stringify(healthPlans));
     navigate('/comparar');
   };
+
+  const openDetailsModal = (plan: HealthPlan) => {
+    setSelectedPlan(plan);
+    setDetailsModalOpen(true);
+  };
+
+  // Filter sidebar component
+  const FilterSidebar = () => (
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-foreground">Filtros</h2>
+    
+      {/* Rango de Precio */}
+      <div>
+        <Label className="text-sm font-medium mb-3 block">Rango de Precio</Label>
+        <Slider
+          min={0}
+          max={600}
+          step={10}
+          value={priceRange}
+          onValueChange={setPriceRange}
+          className="mb-2"
+        />
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>${priceRange[0]}</span>
+          <span>${priceRange[1]}</span>
+        </div>
+      </div>
+
+      {/* Proveedores */}
+      <div>
+        <Label className="text-sm font-medium mb-3 block">Proveedores</Label>
+        <div className="space-y-3">
+          {providers.map(provider => (
+            <div key={provider} className="flex items-center space-x-2">
+              <Checkbox
+                id={provider}
+                checked={selectedProviders.includes(provider)}
+                onCheckedChange={() => toggleProvider(provider)}
+              />
+              <label
+                htmlFor={provider}
+                className="text-sm text-foreground cursor-pointer"
+              >
+                {provider}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Rating Mínimo */}
+      <div>
+        <Label className="text-sm font-medium mb-3 block">Calificación Mínima</Label>
+        <Slider
+          min={0}
+          max={5}
+          step={0.5}
+          value={minRating}
+          onValueChange={setMinRating}
+          className="mb-2"
+        />
+        <div className="text-sm text-muted-foreground">
+          {minRating[0]} estrellas o más
+        </div>
+      </div>
+
+      <Button 
+        variant="outline" 
+        className="w-full"
+        onClick={() => {
+          setPriceRange([0, 600]);
+          setSelectedProviders([]);
+          setMinRating([0]);
+          setSelectedClinicas([]);
+        }}
+      >
+        Limpiar Filtros
+      </Button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -209,84 +309,42 @@ const ResultadosPage = () => {
       
       <div className="container mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-[320px_1fr] gap-6">
-          {/* Sidebar de Filtros */}
-          <aside className="bg-card border border-border rounded-xl p-6 h-fit lg:sticky lg:top-6 shadow-sm">
-            <h2 className="text-xl font-semibold mb-6 text-foreground">Filtros</h2>
-          
-          {/* Rango de Precio */}
-          <div className="mb-8">
-            <Label className="text-sm font-medium mb-3 block">Rango de Precio</Label>
-            <Slider
-              min={0}
-              max={600}
-              step={10}
-              value={priceRange}
-              onValueChange={setPriceRange}
-              className="mb-2"
-            />
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>${priceRange[0]}</span>
-              <span>${priceRange[1]}</span>
-            </div>
-          </div>
-
-          {/* Proveedores */}
-          <div className="mb-8">
-            <Label className="text-sm font-medium mb-3 block">Proveedores</Label>
-            <div className="space-y-3">
-              {providers.map(provider => (
-                <div key={provider} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={provider}
-                    checked={selectedProviders.includes(provider)}
-                    onCheckedChange={() => toggleProvider(provider)}
-                  />
-                  <label
-                    htmlFor={provider}
-                    className="text-sm text-foreground cursor-pointer"
-                  >
-                    {provider}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Rating Mínimo */}
-          <div className="mb-8">
-            <Label className="text-sm font-medium mb-3 block">Calificación Mínima</Label>
-            <Slider
-              min={0}
-              max={5}
-              step={0.5}
-              value={minRating}
-              onValueChange={setMinRating}
-              className="mb-2"
-            />
-            <div className="text-sm text-muted-foreground">
-              {minRating[0]} estrellas o más
-            </div>
-          </div>
-
-            <Button 
-              variant="outline" 
-              className="w-full mt-2"
-              onClick={() => {
-                setPriceRange([0, 600]);
-                setSelectedProviders([]);
-                setMinRating([0]);
-                setSelectedClinicas([]);
-              }}
-            >
-              Limpiar Filtros
-            </Button>
+          {/* Sidebar de Filtros - Desktop */}
+          <aside className="hidden lg:block bg-card border border-border rounded-xl p-6 h-fit lg:sticky lg:top-6 shadow-sm">
+            <FilterSidebar />
           </aside>
+
+          {/* Mobile Filter Drawer */}
+          <Sheet open={filterDrawerOpen} onOpenChange={setFilterDrawerOpen}>
+            <SheetContent side="left" className="w-[80%] sm:w-[350px]">
+              <SheetHeader>
+                <SheetTitle>Filtros</SheetTitle>
+              </SheetHeader>
+              <div className="mt-6">
+                <FilterSidebar />
+              </div>
+            </SheetContent>
+          </Sheet>
 
           {/* Contenido Principal */}
           <main className="flex-1 space-y-6">
-            {/* Header */}
+            {/* Header con Filtros Mobile y Sorting */}
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              {/* Mobile Filter Button */}
+              <div className="lg:hidden mb-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setFilterDrawerOpen(true)}
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filtros
+                </Button>
+              </div>
+
+            <div className="flex flex-col gap-4">
+              {/* Clinic Search */}
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="flex-1 w-full md:max-w-md">
                 <Popover open={openClinicSearch} onOpenChange={setOpenClinicSearch}>
                   <PopoverTrigger asChild>
@@ -346,30 +404,46 @@ const ResultadosPage = () => {
                   </div>
                 )}
               </div>
+              </div>
 
-              <RadioGroup
-                value={viewMode}
-                onValueChange={(value) => setViewMode(value as "grid" | "list")}
-                className="flex gap-2"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="grid" id="grid" />
-                  <Label htmlFor="grid" className="cursor-pointer flex items-center gap-1">
-                    <Grid3x3 className="h-4 w-4" />
-                    Grid
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="list" id="list" />
-                  <Label htmlFor="list" className="cursor-pointer flex items-center gap-1">
-                    <List className="h-4 w-4" />
-                    Lista
-                  </Label>
-                </div>
-              </RadioGroup>
+              {/* Sorting and View Mode */}
+              <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-[240px]">
+                    <SelectValue placeholder="Ordenar por..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Sin ordenar</SelectItem>
+                    <SelectItem value="price-asc">Precio: Menor a Mayor</SelectItem>
+                    <SelectItem value="price-desc">Precio: Mayor a Menor</SelectItem>
+                    <SelectItem value="name-asc">Empresa: A-Z</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <RadioGroup
+                  value={viewMode}
+                  onValueChange={(value) => setViewMode(value as "grid" | "list")}
+                  className="flex gap-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="grid" id="grid" />
+                    <Label htmlFor="grid" className="cursor-pointer flex items-center gap-1">
+                      <Grid3x3 className="h-4 w-4" />
+                      Grid
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="list" id="list" />
+                    <Label htmlFor="list" className="cursor-pointer flex items-center gap-1">
+                      <List className="h-4 w-4" />
+                      Lista
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
             </div>
 
-              <div className="mt-3 text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 {filteredPlans.length} planes encontrados
               </div>
             </div>
@@ -382,21 +456,25 @@ const ResultadosPage = () => {
             ) : (
               <div className={
                 viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                   : "flex flex-col gap-4"
               }>
-            {filteredPlans.map(plan => (
-              <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row overflow-hidden" : "overflow-hidden"}>
+            {sortedPlans.map(plan => (
+              <Card 
+                key={plan._id} 
+                className={`${viewMode === "list" ? "flex flex-col md:flex-row" : ""} overflow-hidden group hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}
+              >
+                {/* Logo Container - Cuadrado */}
                 {plan.images && plan.images[0] && (
-                  <div className="w-full h-24 bg-gradient-to-br from-muted/50 to-muted/30 flex items-center justify-center border-b border-border">
+                  <div className={`${viewMode === "list" ? "md:w-32 md:min-w-32" : "w-full h-32"} bg-white flex items-center justify-center border-b border-border p-4`}>
                     <img
                       src={`/${plan.images[0].url}`}
                       alt={plan.empresa}
-                      className="h-16 object-contain"
+                      className="max-h-20 max-w-full object-contain"
                     />
                   </div>
                 )}
-                <div className="flex-1">
+                <div className="flex-1 flex flex-col">
                   <CardHeader>
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -408,10 +486,10 @@ const ResultadosPage = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-1">
                     <p className="text-sm text-muted-foreground mb-3">{plan.linea}</p>
                     <ul className="space-y-1">
-                      {plan.attributes?.slice(0, 4).map((attr, idx) => (
+                      {plan.attributes?.slice(0, 3).map((attr, idx) => (
                         <li key={`${plan._id}-attr-${idx}`} className="text-sm flex items-center gap-2">
                           <span className="text-primary">✓</span>
                           <span className="font-medium">{attr.name}:</span> {attr.value_name}
@@ -419,30 +497,35 @@ const ResultadosPage = () => {
                       ))}
                     </ul>
                   </CardContent>
+                  <CardFooter className="flex flex-col gap-3">
+                    <div className="text-center w-full">
+                      <div className="text-2xl font-bold text-primary">${plan.price}</div>
+                      <div className="text-xs text-muted-foreground">por mes</div>
+                    </div>
+                    <div className="flex gap-2 w-full">
+                      <Button 
+                        variant={comparisonPlans.includes(plan._id) ? "default" : "outline"}
+                        size="icon"
+                        onClick={() => toggleComparison(plan._id)}
+                        title={comparisonPlans.includes(plan._id) ? "Remover de comparación" : "Agregar a comparación"}
+                      >
+                        {comparisonPlans.includes(plan._id) ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                      </Button>
+                      <Button 
+                        className="flex-1"
+                        onClick={() => openDetailsModal(plan)}
+                      >
+                        Detalles
+                      </Button>
+                    </div>
+                  </CardFooter>
                 </div>
-                <CardFooter className={`flex ${viewMode === "list" ? "md:flex-col md:justify-center md:items-end md:min-w-[200px]" : "flex-col"} gap-3`}>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">${plan.price}</div>
-                    <div className="text-xs text-muted-foreground">por mes</div>
-                  </div>
-                  <div className="flex gap-2 w-full">
-                    <Button 
-                      variant={comparisonPlans.includes(plan._id) ? "default" : "outline"}
-                      size="icon"
-                      onClick={() => toggleComparison(plan._id)}
-                      title={comparisonPlans.includes(plan._id) ? "Remover de comparación" : "Agregar a comparación"}
-                    >
-                      {comparisonPlans.includes(plan._id) ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                    </Button>
-                    <Button className="flex-1">Ver Detalles</Button>
-                  </div>
-                </CardFooter>
               </Card>
             ))}
             </div>
           )}
 
-            {!loading && filteredPlans.length === 0 && (
+            {!loading && sortedPlans.length === 0 && (
               <div className="text-center py-12 bg-card border border-border rounded-xl p-8">
                 <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
                 <p className="text-muted-foreground">No se encontraron planes con los filtros seleccionados</p>
@@ -519,6 +602,97 @@ const ResultadosPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Modal de Detalles */}
+      <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          {selectedPlan && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-2xl">{selectedPlan.name}</DialogTitle>
+                <DialogDescription className="text-base">
+                  {selectedPlan.empresa} - {selectedPlan.linea}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-6 mt-4">
+                {/* Logo */}
+                {selectedPlan.images && selectedPlan.images[0] && (
+                  <div className="flex justify-center p-6 bg-white rounded-lg border border-border">
+                    <img
+                      src={`/${selectedPlan.images[0].url}`}
+                      alt={selectedPlan.empresa}
+                      className="max-h-24 object-contain"
+                    />
+                  </div>
+                )}
+
+                {/* Precio y Rating */}
+                <div className="flex items-center justify-between p-6 bg-muted/30 rounded-lg">
+                  <div>
+                    <div className="text-3xl font-bold text-primary">${selectedPlan.price}</div>
+                    <div className="text-sm text-muted-foreground">por mes</div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-accent px-4 py-2 rounded-lg">
+                    <span className="text-lg font-medium">⭐ {selectedPlan.rating}</span>
+                  </div>
+                </div>
+
+                {/* Atributos completos */}
+                {selectedPlan.attributes && selectedPlan.attributes.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Beneficios y Coberturas</h3>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {selectedPlan.attributes.map((attr, idx) => (
+                        <div key={idx} className="flex items-start gap-2 p-3 bg-muted/20 rounded-lg">
+                          <span className="text-primary mt-0.5">✓</span>
+                          <div className="flex-1">
+                            <span className="font-medium text-sm">{attr.name}:</span>{" "}
+                            <span className="text-sm text-muted-foreground">{attr.value_name}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Clínicas */}
+                {selectedPlan.clinicas && selectedPlan.clinicas.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Clínicas Disponibles ({selectedPlan.clinicas.length})</h3>
+                    <div className="max-h-60 overflow-y-auto space-y-2">
+                      {selectedPlan.clinicas.slice(0, 10).map((clinica, idx) => (
+                        <div key={idx} className="p-2 bg-muted/20 rounded text-sm">
+                          {clinica.entity}
+                        </div>
+                      ))}
+                      {selectedPlan.clinicas.length > 10 && (
+                        <p className="text-sm text-muted-foreground text-center pt-2">
+                          Y {selectedPlan.clinicas.length - 10} clínicas más...
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Botones de acción */}
+                <div className="flex gap-3 pt-4 border-t border-border">
+                  <Button 
+                    variant={comparisonPlans.includes(selectedPlan._id) ? "default" : "outline"}
+                    onClick={() => toggleComparison(selectedPlan._id)}
+                    className="flex-1"
+                  >
+                    {comparisonPlans.includes(selectedPlan._id) ? "Quitar de comparación" : "Agregar a comparación"}
+                  </Button>
+                  <Button onClick={() => setFormQuoteOpen(true)} className="flex-1">
+                    Solicitar Cotización
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
