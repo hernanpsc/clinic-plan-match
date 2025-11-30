@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Attribute {
   name: string;
@@ -48,6 +49,7 @@ interface HealthPlan {
   attributes?: Attribute[];
   clinicas?: Clinica[];
   images?: Image[];
+  pdfUrl?: string;
 }
 
 const ResultadosPage = () => {
@@ -605,7 +607,7 @@ const ResultadosPage = () => {
 
       {/* Modal de Detalles */}
       <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           {selectedPlan && (
             <>
               <DialogHeader>
@@ -615,80 +617,105 @@ const ResultadosPage = () => {
                 </DialogDescription>
               </DialogHeader>
               
-              <div className="space-y-6 mt-4">
-                {/* Logo */}
-                {selectedPlan.images && selectedPlan.images[0] && (
-                  <div className="flex justify-center p-6 bg-white rounded-lg border border-border">
-                    <img
-                      src={`/${selectedPlan.images[0].url}`}
-                      alt={selectedPlan.empresa}
-                      className="max-h-24 object-contain"
-                    />
-                  </div>
-                )}
+              <Tabs defaultValue="info" className="flex-1 flex flex-col overflow-hidden mt-4">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="info">Información</TabsTrigger>
+                  <TabsTrigger value="pdf" disabled={!selectedPlan.pdfUrl}>
+                    PDF del Plan
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="info" className="flex-1 overflow-y-auto space-y-6 mt-4">
+                  {/* Logo */}
+                  {selectedPlan.images && selectedPlan.images[0] && (
+                    <div className="flex justify-center p-6 bg-white rounded-lg border border-border">
+                      <img
+                        src={`/${selectedPlan.images[0].url}`}
+                        alt={selectedPlan.empresa}
+                        className="max-h-24 object-contain"
+                      />
+                    </div>
+                  )}
 
-                {/* Precio y Rating */}
-                <div className="flex items-center justify-between p-6 bg-muted/30 rounded-lg">
-                  <div>
-                    <div className="text-3xl font-bold text-primary">${selectedPlan.price}</div>
-                    <div className="text-sm text-muted-foreground">por mes</div>
+                  {/* Precio y Rating */}
+                  <div className="flex items-center justify-between p-6 bg-muted/30 rounded-lg">
+                    <div>
+                      <div className="text-3xl font-bold text-primary">${selectedPlan.price}</div>
+                      <div className="text-sm text-muted-foreground">por mes</div>
+                    </div>
+                    <div className="flex items-center gap-2 bg-accent px-4 py-2 rounded-lg">
+                      <span className="text-lg font-medium">⭐ {selectedPlan.rating}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-accent px-4 py-2 rounded-lg">
-                    <span className="text-lg font-medium">⭐ {selectedPlan.rating}</span>
-                  </div>
-                </div>
 
-                {/* Atributos completos */}
-                {selectedPlan.attributes && selectedPlan.attributes.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Beneficios y Coberturas</h3>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      {selectedPlan.attributes.map((attr, idx) => (
-                        <div key={idx} className="flex items-start gap-2 p-3 bg-muted/20 rounded-lg">
-                          <span className="text-primary mt-0.5">✓</span>
-                          <div className="flex-1">
-                            <span className="font-medium text-sm">{attr.name}:</span>{" "}
-                            <span className="text-sm text-muted-foreground">{attr.value_name}</span>
+                  {/* Atributos completos */}
+                  {selectedPlan.attributes && selectedPlan.attributes.length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Beneficios y Coberturas</h3>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {selectedPlan.attributes.map((attr, idx) => (
+                          <div key={idx} className="flex items-start gap-2 p-3 bg-muted/20 rounded-lg">
+                            <span className="text-primary mt-0.5">✓</span>
+                            <div className="flex-1">
+                              <span className="font-medium text-sm">{attr.name}:</span>{" "}
+                              <span className="text-sm text-muted-foreground">{attr.value_name}</span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Clínicas */}
-                {selectedPlan.clinicas && selectedPlan.clinicas.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Clínicas Disponibles ({selectedPlan.clinicas.length})</h3>
-                    <div className="max-h-60 overflow-y-auto space-y-2">
-                      {selectedPlan.clinicas.slice(0, 10).map((clinica, idx) => (
-                        <div key={idx} className="p-2 bg-muted/20 rounded text-sm">
-                          {clinica.entity}
-                        </div>
-                      ))}
-                      {selectedPlan.clinicas.length > 10 && (
-                        <p className="text-sm text-muted-foreground text-center pt-2">
-                          Y {selectedPlan.clinicas.length - 10} clínicas más...
-                        </p>
-                      )}
+                  {/* Clínicas */}
+                  {selectedPlan.clinicas && selectedPlan.clinicas.length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Clínicas Disponibles ({selectedPlan.clinicas.length})</h3>
+                      <div className="max-h-60 overflow-y-auto space-y-2">
+                        {selectedPlan.clinicas.slice(0, 10).map((clinica, idx) => (
+                          <div key={idx} className="p-2 bg-muted/20 rounded text-sm">
+                            {clinica.entity}
+                          </div>
+                        ))}
+                        {selectedPlan.clinicas.length > 10 && (
+                          <p className="text-sm text-muted-foreground text-center pt-2">
+                            Y {selectedPlan.clinicas.length - 10} clínicas más...
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Botones de acción */}
-                <div className="flex gap-3 pt-4 border-t border-border">
-                  <Button 
-                    variant={comparisonPlans.includes(selectedPlan._id) ? "default" : "outline"}
-                    onClick={() => toggleComparison(selectedPlan._id)}
-                    className="flex-1"
-                  >
-                    {comparisonPlans.includes(selectedPlan._id) ? "Quitar de comparación" : "Agregar a comparación"}
-                  </Button>
-                  <Button onClick={() => setFormQuoteOpen(true)} className="flex-1">
-                    Solicitar Cotización
-                  </Button>
-                </div>
-              </div>
+                  {/* Botones de acción */}
+                  <div className="flex gap-3 pt-4 border-t border-border">
+                    <Button 
+                      variant={comparisonPlans.includes(selectedPlan._id) ? "default" : "outline"}
+                      onClick={() => toggleComparison(selectedPlan._id)}
+                      className="flex-1"
+                    >
+                      {comparisonPlans.includes(selectedPlan._id) ? "Quitar de comparación" : "Agregar a comparación"}
+                    </Button>
+                    <Button onClick={() => setFormQuoteOpen(true)} className="flex-1">
+                      Solicitar Cotización
+                    </Button>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="pdf" className="flex-1 overflow-hidden mt-4">
+                  {selectedPlan.pdfUrl ? (
+                    <div className="h-full w-full rounded-lg overflow-hidden border border-border">
+                      <iframe
+                        src={selectedPlan.pdfUrl}
+                        className="w-full h-full min-h-[600px]"
+                        title={`PDF - ${selectedPlan.name}`}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                      <p>No hay PDF disponible para este plan</p>
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </>
           )}
         </DialogContent>
