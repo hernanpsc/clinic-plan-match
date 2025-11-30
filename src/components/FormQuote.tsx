@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { JSX } from 'react/jsx-runtime';
+import { useToast } from '@/hooks/use-toast';
 
 // Define the custom primary color for consistency with the Angular component's styling
 const PRIMARY_COLOR = '#4d72aa';
@@ -87,6 +88,7 @@ const initialFormData = {
 
 
 const FormQuote = () => {
+  const { toast } = useToast();
   // --- State Variables ---
   const [activeStep, setActiveStep] = useState(1);
   const [selectedGroup, setSelectedGroup] = useState(null); // 1, 2, 3, 4
@@ -296,10 +298,61 @@ const FormQuote = () => {
     submitFormManually();
   };
 
-  const submitFormManually = () => {
+  const submitFormManually = async () => {
     console.log('--- Formulario Finalizado y Enviado ---');
     console.log(formData);
-    // In a production app, this is where you'd send the 'formData' object to the backend.
+    
+    try {
+      // Importar el cliente de Supabase dinámicamente
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      toast({
+        title: "Enviando cotización...",
+        description: "Por favor espera mientras procesamos tu solicitud",
+      });
+
+      // Llamar al edge function
+      const { data, error } = await supabase.functions.invoke('submit-quote', {
+        body: {
+          group: formData.group,
+          edad_1: formData.edad_1,
+          edad_2: formData.edad_2,
+          numkids: formData.numkids,
+          edadHijo1: formData.edadHijo1,
+          edadHijo2: formData.edadHijo2,
+          edadHijo3: formData.edadHijo3,
+          edadHijo4: formData.edadHijo4,
+          edadHijo5: formData.edadHijo5,
+          zone_type: formData.zone_type,
+          tipo: formData.tipo,
+          sueldo: formData.sueldo,
+          aporteOS: formData.aporteOS,
+          personalData: formData.personalData
+        }
+      });
+
+      if (error) {
+        console.error('Error al enviar cotización:', error);
+        toast({
+          title: "Error al enviar",
+          description: "No pudimos procesar tu cotización. Por favor intenta nuevamente.",
+          variant: "destructive"
+        });
+      } else {
+        console.log('Cotización enviada exitosamente:', data);
+        toast({
+          title: "¡Cotización enviada!",
+          description: "Hemos recibido tu solicitud. Te contactaremos pronto.",
+        });
+      }
+    } catch (err) {
+      console.error('Error inesperado al enviar cotización:', err);
+      toast({
+        title: "Error inesperado",
+        description: "Ocurrió un problema al enviar tu cotización.",
+        variant: "destructive"
+      });
+    }
   };
 
   // --- Step Navigation ---
