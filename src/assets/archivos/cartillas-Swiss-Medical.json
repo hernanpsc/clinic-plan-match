@@ -1,0 +1,1064 @@
+NUBIAL 
+[
+    {
+       "nombre":"Clinica Y Maternidad Suizo Argentina",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Zabala",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Agote",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De Los Arcos",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"CEMIC",
+       "barrio":"Recoleta",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Adventista Belgrano",
+       "barrio":"Coghlan",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica La Sagrada Familia",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica San Camilo",
+       "barrio":"Caballito",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Santa Isabel",
+       "barrio":"Caballito",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Hospital Britanico",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Cardiovascular De Buenos Aires",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Dupuytren",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Medico De Alta Complejidad",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Otorrinolaringologico Fundacion Arauz",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Anchorena",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De La Trinidad",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Mater Dei",
+       "barrio":"Palermo",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Olivos",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Gral De Obstetricia Y Cirugia Ntra. Sra De Fatima",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Privada San Fernando",
+       "barrio":"San Fernando",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio San Lucas",
+       "barrio":"San Isidro",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio San Pablo",
+       "barrio":"San Fernando",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Mariano Pelliza",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Santa Maria",
+       "barrio":"Villa Ballester",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Corporacion Medica Gral. San Martin",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Sanatorio Anchorena",
+       "barrio":"San Martin",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Casa Hospital San Juan De Dios",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Modelo De Moron",
+       "barrio":"Moron",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Del Centro",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Del Buen Pastor",
+       "barrio":"Lomas Del Mirador",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Tachella",
+       "barrio":"Haedo",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Hospital Italiano",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Policlinico Cristo Caminante",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Clinica Modelo Laferrere",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Del Oeste Ituzaingo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Del Oeste Merlo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Asociacion Medica Lomas De Zamora",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica I.M.A. ",
+       "barrio":"Adrogue",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada General Belgrano",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Monte Grande",
+       "barrio":"Monte Grande",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio San Francisco",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Trinidad Quilmes",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Juncal",
+       "barrio":"Temperley",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    }
+ ]
+
+
+
+ GLOBAL
+ [
+    {
+       "nombre":"Clinica Y Maternidad Suizo Argentina",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Zabala",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Agote",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De Los Arcos",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Centro Valls",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Adventista Belgrano",
+       "barrio":"Coghlan",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica De Microcirugia",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica La Sagrada Familia",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica San Camilo",
+       "barrio":"Caballito",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica San Jeronimo Cirugia Ambulatoria",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Santa Isabel",
+       "barrio":"Caballito",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Fundacion Favaloro",
+       "barrio":"Congreso",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Fundacion Instituto Quirurgico Del Callao",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Hospital Britanico",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Hospital Italiano. ",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"I.A.D.T. ",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Alexander Fleming",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Dupuytren",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Medico De Alta Complejidad",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Otorrinolaringologico Fundacion Arauz",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Superior De Otorrinolaringologia",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Anchorena",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De La Providencia",
+       "barrio":"Tribunales",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De La Trinidad",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Mater Dei",
+       "barrio":"Palermo",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Otamendi Y Miroli",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Olivos",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Gral De Obstetricia Y Cirugia Ntra. Sra De Fatima",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Privada San Fernando",
+       "barrio":"San Fernando",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Las Lomas",
+       "barrio":"San Isidro",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio San Lucas",
+       "barrio":"San Isidro",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio San Pablo",
+       "barrio":"San Fernando",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Trinidad San Isidro",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Mariano Pelliza",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Santa Maria",
+       "barrio":"Villa Ballester",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Clinica Y Maternidad Sagrado Corazon",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Corporacion Medica Gral. San Martin",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Hospital Universitario Austral",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Clinica Bessone",
+       "barrio":"San Miguel",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Sanatorio Anchorena",
+       "barrio":"San Martin",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Casa Hospital San Juan De Dios",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Modelo De Moron",
+       "barrio":"Moron",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Del Centro",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Del Buen Pastor",
+       "barrio":"Lomas Del Mirador",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Tachella",
+       "barrio":"Haedo",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Hospital Italiano",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Policlinico Cristo Caminante",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Instituto Medico Central",
+       "barrio":"Ituzaingo",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Clinica Modelo Laferrere",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Asociacion Medica Lomas De Zamora",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Calchqui ",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Espora",
+       "barrio":"Adrogue",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica I.M.A. ",
+       "barrio":"Adrogue",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada General Belgrano",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Lujan",
+       "barrio":"Florencio Varela",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Monte Grande",
+       "barrio":"Monte Grande",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Passo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Ranelagh",
+       "barrio":"Ranelagh",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Instituto Medico Modelo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Bernal ",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Itoiz",
+       "barrio":"Avellaneda",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Trinidad Quilmes",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Juncal",
+       "barrio":"Temperley",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Privado Del Niño Y La Familia",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Nuevo Sanatorio Berazategüi ",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    }
+ ]
+
+ PREMIUM
+ [
+    {
+       "nombre":"Clinica Y Maternidad Suizo Argentina",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Zabala",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Agote",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De Los Arcos",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Adventista Belgrano",
+       "barrio":"Coghlan",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica La Sagrada Familia",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica San Camilo",
+       "barrio":"Caballito",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Santa Isabel",
+       "barrio":"Caballito",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Fleni",
+       "barrio":"Belgrano",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Fundacion Favaloro",
+       "barrio":"Congreso",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Hospital Aleman",
+       "barrio":"Barrio Norte",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Hospital Britanico",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Hospital Italiano. ",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"I.A.D.T. ",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Alexander Fleming",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Cardiovascular De Buenos Aires",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Dupuytren",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Medico De Alta Complejidad",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Otorrinolaringologico Fundacion Arauz",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Instituto Superior De Otorrinolaringologia",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Anchorena",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De La Providencia",
+       "barrio":"Tribunales",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio De La Trinidad",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Mater Dei",
+       "barrio":"Palermo",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Sanatorio Otamendi Y Miroli",
+       "barrio":"",
+       "provincia":"CABA",
+       "region":"CABA"
+    },
+    {
+       "nombre":"Clinica Olivos",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Gral De Obstetricia Y Cirugia Ntra. Sra De Fatima",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Privada San Fernando",
+       "barrio":"San Fernando",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Las Lomas",
+       "barrio":"San Isidro",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio San Lucas",
+       "barrio":"San Isidro",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio San Pablo",
+       "barrio":"San Fernando",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Trinidad San Isidro",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Sanatorio Mariano Pelliza",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Norte"
+    },
+    {
+       "nombre":"Clinica Santa Maria",
+       "barrio":"Villa Ballester",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Clinica Y Maternidad Sagrado Corazon",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Corporacion Medica Gral. San Martin",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Hospital Universitario Austral",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Clinica Bessone",
+       "barrio":"San Miguel",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Sanatorio Anchorena",
+       "barrio":"San Martin",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Noroeste"
+    },
+    {
+       "nombre":"Casa Hospital San Juan De Dios",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Modelo De Moron",
+       "barrio":"Moron",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Del Centro",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Del Buen Pastor",
+       "barrio":"Lomas Del Mirador",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Clinica Privada Tachella",
+       "barrio":"Haedo",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Hospital Italiano",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Policlinico Cristo Caminante",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Instituto Medico Central",
+       "barrio":"Ituzaingo",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Clinica Modelo Laferrere",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Del Oeste Ituzaingo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Sanatorio Del Oeste Merlo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-Oeste"
+    },
+    {
+       "nombre":"Asociacion Medica Lomas De Zamora",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Calchqui ",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Espora",
+       "barrio":"Adrogue",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica I.M.A. ",
+       "barrio":"Adrogue",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada General Belgrano",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Lujan",
+       "barrio":"Florencio Varela",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Monte Grande",
+       "barrio":"Monte Grande",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Passo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Ranelagh",
+       "barrio":"Ranelagh",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Clinica Privada Instituto Medico Modelo",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Bernal ",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio San Francisco",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Itoiz",
+       "barrio":"Avellaneda",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Trinidad Quilmes",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Juncal",
+       "barrio":"Temperley",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Sanatorio Privado Del Niño Y La Familia",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    },
+    {
+       "nombre":"Nuevo Sanatorio Berazategüi ",
+       "barrio":"",
+       "provincia":"Buenos Aires",
+       "region":"GBA-sur"
+    }
+ ]
+
