@@ -386,22 +386,22 @@ const ResultadosPage = () => {
                   : "flex flex-col gap-4"
               }>
             {filteredPlans.map(plan => (
-              <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row" : ""}>
+              <Card key={plan._id} className={viewMode === "list" ? "flex flex-col md:flex-row overflow-hidden" : "overflow-hidden"}>
+                {plan.images && plan.images[0] && (
+                  <div className="w-full h-24 bg-gradient-to-br from-muted/50 to-muted/30 flex items-center justify-center border-b border-border">
+                    <img
+                      src={`/${plan.images[0].url}`}
+                      alt={plan.empresa}
+                      className="h-16 object-contain"
+                    />
+                  </div>
+                )}
                 <div className="flex-1">
                   <CardHeader>
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-start gap-3 flex-1">
-                        {plan.images && plan.images[0] && (
-                          <img
-                            src={`/${plan.images[0].url}`}
-                            alt={plan.empresa}
-                            className="w-12 h-12 object-contain flex-shrink-0"
-                          />
-                        )}
-                        <div>
-                          <CardTitle className="text-lg">{plan.name}</CardTitle>
-                          <CardDescription>{plan.empresa}</CardDescription>
-                        </div>
+                      <div>
+                        <CardTitle className="text-lg">{plan.name}</CardTitle>
+                        <CardDescription>{plan.empresa}</CardDescription>
                       </div>
                       <div className="flex items-center gap-1 bg-accent px-2 py-1 rounded flex-shrink-0">
                         <span className="text-sm font-medium">⭐ {plan.rating}</span>
