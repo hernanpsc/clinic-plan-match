@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef, SVGProps } from 'react';
 import { JSX } from 'react/jsx-runtime';
 import { useToast } from '@/hooks/use-toast';
 import { submitQuote, type QuoteFormData } from '@/services/health.service';
-
 // Define the custom primary color for consistency with the Angular component's styling
 const PRIMARY_COLOR = '#4d72aa';
 const SECONDARY_COLOR = '#c4e2ff';
@@ -13,42 +12,42 @@ const DELETE_COLOR = '#cc0000';
 // Inline Lucide Icons (React props style)
 
 // User Icon (Individual)
-const UserIcon = (props: JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => (
+const UserIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user">
     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
   </svg>
 );
 
 // Users Icon (Pareja)
-const UsersIcon = (props: any) => (
+const UsersIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users">
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
   </svg>
 );
 
 // User Plus Icon (Titular + Hijos)
-const UserPlusIcon = (props: any) => (
+const UserPlusIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user-plus">
     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/>
   </svg>
 );
 
 // Users Plus Icon (Pareja + Hijos)
-const UsersPlusIcon = (props: any) => (
+const UsersPlusIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users-plus">
     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/><path d="M17.5 17.5v-10h-1"/>
   </svg>
 );
 
 // Phone Icon (Contacto)
-const PhoneIcon = (props: any) => (
+const PhoneIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-phone">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-3.67-2.61L7.54 13.91l1.84-1.84 2.87-2.87 1.84-1.84 2.61-3.67A19.5 19.5 0 0 1 19.92 4A2 2 0 0 1 22 6.18v3.63"/>
   </svg>
 );
 
 // Message Square Icon (Whatsapp)
-const MessageSquareIcon = (props: any) => (
+const MessageSquareIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-message-square">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
