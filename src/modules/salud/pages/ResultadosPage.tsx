@@ -1,27 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Grid3x3, List, Plus, Minus, Filter, X, ChevronDown } from "lucide-react";
-import { getHealthPlans, type HealthPlan, type Attribute, type Clinica, type Image } from "@/services/health.service";
+import { Search, Grid3x3, Plus } from "lucide-react";
+import { getHealthPlans, type HealthPlan, type Clinica } from "@/services/health.service";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/layouts/Layout";
 import FormQuote from "@/modules/salud/components/FormQuote";
 import { FloatingQuoteButton } from "@/modules/salud/components/FloatingQuoteButton";
 import { ComparisonBar } from "@/modules/salud/components/ComparisonBar";
+import { ResultsFilterSidebar } from "@/modules/salud/components/ResultsFilterSidebar";
+import { ResultsHeaderBar } from "@/modules/salud/components/ResultsHeaderBar";
+import { ResultsGrid } from "@/modules/salud/components/ResultsGrid";
+import { PlanDetailsModal } from "@/modules/salud/components/PlanDetailsModal";
 import { useToast } from "@/hooks/use-toast";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Interfaces are now imported from health.service.ts
 
@@ -150,80 +143,12 @@ const ResultadosPage = () => {
     setDetailsModalOpen(true);
   };
 
-  // Filter sidebar component
-  const FilterSidebar = () => (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-foreground">Filtros</h2>
-    
-      {/* Rango de Precio */}
-      <div>
-        <Label className="text-sm font-medium mb-3 block">Rango de Precio</Label>
-        <Slider
-          min={0}
-          max={600}
-          step={10}
-          value={priceRange}
-          onValueChange={setPriceRange}
-          className="mb-2"
-        />
-        <div className="flex justify-between text-sm text-muted-foreground">
-          <span>${priceRange[0]}</span>
-          <span>${priceRange[1]}</span>
-        </div>
-      </div>
-
-      {/* Proveedores */}
-      <div>
-        <Label className="text-sm font-medium mb-3 block">Proveedores</Label>
-        <div className="space-y-3">
-          {providers.map(provider => (
-            <div key={provider} className="flex items-center space-x-2">
-              <Checkbox
-                id={provider}
-                checked={selectedProviders.includes(provider)}
-                onCheckedChange={() => toggleProvider(provider)}
-              />
-              <label
-                htmlFor={provider}
-                className="text-sm text-foreground cursor-pointer"
-              >
-                {provider}
-              </label>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Rating Mínimo */}
-      <div>
-        <Label className="text-sm font-medium mb-3 block">Calificación Mínima</Label>
-        <Slider
-          min={0}
-          max={5}
-          step={0.5}
-          value={minRating}
-          onValueChange={setMinRating}
-          className="mb-2"
-        />
-        <div className="text-sm text-muted-foreground">
-          {minRating[0]} estrellas o más
-        </div>
-      </div>
-
-      <Button 
-        variant="outline" 
-        className="w-full"
-        onClick={() => {
-          setPriceRange([0, 600]);
-          setSelectedProviders([]);
-          setMinRating([0]);
-          setSelectedClinicas([]);
-        }}
-      >
-        Limpiar Filtros
-      </Button>
-    </div>
-  );
+  const clearFilters = () => {
+    setPriceRange([0, 600]);
+    setSelectedProviders([]);
+    setMinRating([0]);
+    setSelectedClinicas([]);
+  };
 
   return (
     <Layout>
@@ -294,7 +219,16 @@ const ResultadosPage = () => {
         <div className="grid lg:grid-cols-[320px_1fr] gap-6">
           {/* Sidebar de Filtros - Desktop */}
           <aside className="hidden lg:block bg-card border border-border rounded-xl p-6 h-fit lg:sticky lg:top-6 shadow-sm">
-            <FilterSidebar />
+            <ResultsFilterSidebar
+              priceRange={priceRange}
+              onPriceRangeChange={setPriceRange}
+              providers={providers}
+              selectedProviders={selectedProviders}
+              onToggleProvider={toggleProvider}
+              minRating={minRating}
+              onMinRatingChange={setMinRating}
+              onClearFilters={clearFilters}
+            />
           </aside>
 
           {/* Mobile Filter Drawer */}
@@ -304,232 +238,45 @@ const ResultadosPage = () => {
                 <SheetTitle>Filtros</SheetTitle>
               </SheetHeader>
               <div className="mt-6">
-                <FilterSidebar />
+                <ResultsFilterSidebar
+                  priceRange={priceRange}
+                  onPriceRangeChange={setPriceRange}
+                  providers={providers}
+                  selectedProviders={selectedProviders}
+                  onToggleProvider={toggleProvider}
+                  minRating={minRating}
+                  onMinRatingChange={setMinRating}
+                  onClearFilters={clearFilters}
+                />
               </div>
             </SheetContent>
           </Sheet>
 
           {/* Contenido Principal */}
           <main className="flex-1 space-y-6">
-            {/* Header con Filtros Mobile y Sorting */}
-            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-              {/* Mobile Filter Button */}
-              <div className="lg:hidden mb-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => setFilterDrawerOpen(true)}
-                >
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtros
-                </Button>
-              </div>
+            <ResultsHeaderBar
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              filteredPlansCount={filteredPlans.length}
+              onOpenFilters={() => setFilterDrawerOpen(true)}
+              allClinicas={allClinicas}
+              selectedClinicas={selectedClinicas}
+              onToggleClinica={toggleClinica}
+              onRemoveClinica={removeClinica}
+              openClinicSearch={openClinicSearch}
+              onOpenClinicSearchChange={setOpenClinicSearch}
+            />
 
-            <div className="flex flex-col gap-4">
-              {/* Clinic Search */}
-              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="flex-1 w-full md:max-w-md">
-                <Popover open={openClinicSearch} onOpenChange={setOpenClinicSearch}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openClinicSearch}
-                      className="w-full justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Search className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Buscar clínicas...</span>
-                      </div>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0" align="start">
-                    <Command>
-                      <CommandInput placeholder="Buscar clínicas..." />
-                      <CommandList>
-                        <CommandEmpty>No se encontraron clínicas.</CommandEmpty>
-                        <CommandGroup>
-                          {allClinicas
-                            .filter(clinica => 
-                              !selectedClinicas.find(c => c.item_id === clinica.item_id)
-                            )
-                            .map((clinica) => (
-                            <CommandItem
-                              key={clinica.item_id}
-                              onSelect={() => {
-                                toggleClinica(clinica);
-                                setOpenClinicSearch(false);
-                              }}
-                            >
-                              {clinica.entity}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                
-                {/* Selected clinics badges */}
-                {selectedClinicas.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {selectedClinicas.map((clinica) => (
-                      <Badge
-                        key={clinica.item_id}
-                        variant="secondary"
-                        className="cursor-pointer"
-                        onClick={() => removeClinica(clinica.item_id)}
-                      >
-                        {clinica.entity}
-                        <span className="ml-1">×</span>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-              </div>
-
-              {/* Sorting and View Mode */}
-              <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-full sm:w-[240px]">
-                    <SelectValue placeholder="Ordenar por..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Sin ordenar</SelectItem>
-                    <SelectItem value="price-asc">Precio: Menor a Mayor</SelectItem>
-                    <SelectItem value="price-desc">Precio: Mayor a Menor</SelectItem>
-                    <SelectItem value="name-asc">Empresa: A-Z</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <RadioGroup
-                  value={viewMode}
-                  onValueChange={(value) => setViewMode(value as "grid" | "list")}
-                  className="flex gap-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="grid" id="grid" />
-                    <Label htmlFor="grid" className="cursor-pointer flex items-center gap-1">
-                      <Grid3x3 className="h-4 w-4" />
-                      Grid
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="list" id="list" />
-                    <Label htmlFor="list" className="cursor-pointer flex items-center gap-1">
-                      <List className="h-4 w-4" />
-                      Lista
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <div className="text-sm text-muted-foreground">
-                {filteredPlans.length} planes encontrados
-              </div>
-            </div>
-
-            {/* Cards Grid/List */}
-            {loading ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Cargando planes...</p>
-              </div>
-            ) : (
-              <div className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                  : "flex flex-col gap-4"
-              }>
-            {sortedPlans.map(plan => (
-              <Card 
-                key={plan._id} 
-                className={`${viewMode === "list" ? "flex flex-col md:flex-row" : ""} overflow-hidden hover:shadow-colorful transition-all duration-300 border-border/50`}
-              >
-                {/* Logo Container */}
-                {plan.images && plan.images[0] && (
-                  <div className={`${viewMode === "list" ? "md:w-24 md:min-w-24" : "w-full h-20"} bg-gradient-to-br from-muted/30 to-muted/10 flex items-center justify-center border-b border-border/30 p-3`}>
-                    <img
-                      src={`/${plan.images[0].url}`}
-                      alt={plan.empresa}
-                      className="max-h-10 max-w-full object-contain opacity-90"
-                    />
-                  </div>
-                )}
-                <div className="flex-1 flex flex-col">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base font-semibold truncate">{plan.name}</CardTitle>
-                        <CardDescription className="text-xs mt-1">{plan.empresa}</CardDescription>
-                      </div>
-                      <Badge variant="secondary" className="flex items-center gap-1 px-2 py-1 flex-shrink-0 bg-accent/10 text-accent-foreground border-accent/20">
-                        <span className="text-xs">⭐</span>
-                        <span className="text-xs font-semibold">{plan.rating}</span>
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-1 py-3">
-                    <p className="text-xs font-medium text-muted-foreground mb-3 bg-muted/30 px-2 py-1 rounded inline-block">{plan.linea}</p>
-                    <ul className="space-y-2">
-                      {plan.attributes?.slice(0, 3).map((attr, idx) => (
-                        <li key={`${plan._id}-attr-${idx}`} className="text-xs flex items-start gap-2">
-                          <span className="text-primary mt-0.5 flex-shrink-0">✓</span>
-                          <span className="flex-1">
-                            <span className="font-semibold text-foreground">{attr.name}:</span>{" "}
-                            <span className="text-muted-foreground">{attr.value_name}</span>
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  <CardFooter className="flex flex-col gap-3 pt-3 border-t border-border/30">
-                    <div className="flex items-center justify-between w-full">
-                      <div>
-                        <div className="text-2xl font-bold text-primary">${plan.price}</div>
-                        <div className="text-[10px] text-muted-foreground">por mes</div>
-                      </div>
-                      <Button 
-                        variant={comparisonPlans.includes(plan._id) ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => toggleComparison(plan._id)}
-                        className="flex items-center gap-1.5"
-                        title={comparisonPlans.includes(plan._id) ? "Remover de comparación" : "Agregar a comparación"}
-                      >
-                        {comparisonPlans.includes(plan._id) ? (
-                          <>
-                            <Minus className="h-3.5 w-3.5" />
-                            <span className="text-xs">Quitar</span>
-                          </>
-                        ) : (
-                          <>
-                            <Plus className="h-3.5 w-3.5" />
-                            <span className="text-xs">Comparar</span>
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                    <Button 
-                      className="w-full"
-                      onClick={() => openDetailsModal(plan)}
-                      variant="secondary"
-                    >
-                      Ver Detalles
-                    </Button>
-                  </CardFooter>
-                </div>
-              </Card>
-            ))}
-            </div>
-          )}
-
-            {!loading && sortedPlans.length === 0 && (
-              <div className="text-center py-12 bg-card border border-border rounded-xl p-8">
-                <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-                <p className="text-muted-foreground">No se encontraron planes con los filtros seleccionados</p>
-              </div>
-            )}
-            </div>
+            <ResultsGrid
+              plans={sortedPlans}
+              loading={loading}
+              viewMode={viewMode}
+              comparisonPlans={comparisonPlans}
+              onToggleComparison={toggleComparison}
+              onOpenDetails={openDetailsModal}
+            />
           </main>
         </div>
       </div>
@@ -563,121 +310,14 @@ const ResultadosPage = () => {
         </div>
       </div>
 
-      {/* Modal de Detalles */}
-      <Dialog open={detailsModalOpen} onOpenChange={setDetailsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-          {selectedPlan && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-2xl">{selectedPlan.name}</DialogTitle>
-                <DialogDescription className="text-base">
-                  {selectedPlan.empresa} - {selectedPlan.linea}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <Tabs defaultValue="info" className="flex-1 flex flex-col overflow-hidden mt-4">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="info">Información</TabsTrigger>
-                  <TabsTrigger value="pdf" disabled={!selectedPlan.folleto?.[0]}>
-                    PDF del Plan
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="info" className="flex-1 overflow-y-auto space-y-6 mt-4">
-                  {/* Logo */}
-                  {selectedPlan.images && selectedPlan.images[0] && (
-                    <div className="flex justify-center p-4 bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg border border-border/30">
-                      <img
-                        src={`/${selectedPlan.images[0].url}`}
-                        alt={selectedPlan.empresa}
-                        className="max-h-12 object-contain opacity-90"
-                      />
-                    </div>
-                  )}
-
-                  {/* Precio y Rating */}
-                  <div className="flex items-center justify-between p-6 bg-muted/30 rounded-lg">
-                    <div>
-                      <div className="text-3xl font-bold text-primary">${selectedPlan.price}</div>
-                      <div className="text-sm text-muted-foreground">por mes</div>
-                    </div>
-                    <div className="flex items-center gap-2 bg-accent px-4 py-2 rounded-lg">
-                      <span className="text-lg font-medium">⭐ {selectedPlan.rating}</span>
-                    </div>
-                  </div>
-
-                  {/* Atributos completos */}
-                  {selectedPlan.attributes && selectedPlan.attributes.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">Beneficios y Coberturas</h3>
-                      <div className="grid md:grid-cols-2 gap-3">
-                        {selectedPlan.attributes.map((attr, idx) => (
-                          <div key={idx} className="flex items-start gap-2 p-3 bg-muted/20 rounded-lg">
-                            <span className="text-primary mt-0.5">✓</span>
-                            <div className="flex-1">
-                              <span className="font-medium text-sm">{attr.name}:</span>{" "}
-                              <span className="text-sm text-muted-foreground">{attr.value_name}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Clínicas */}
-                  {selectedPlan.clinicas && selectedPlan.clinicas.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">Clínicas Disponibles ({selectedPlan.clinicas.length})</h3>
-                      <div className="max-h-60 overflow-y-auto space-y-2">
-                        {selectedPlan.clinicas.slice(0, 10).map((clinica, idx) => (
-                          <div key={idx} className="p-2 bg-muted/20 rounded text-sm">
-                            {clinica.entity}
-                          </div>
-                        ))}
-                        {selectedPlan.clinicas.length > 10 && (
-                          <p className="text-sm text-muted-foreground text-center pt-2">
-                            Y {selectedPlan.clinicas.length - 10} clínicas más...
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Botones de acción */}
-                  <div className="flex gap-3 pt-4 border-t border-border">
-                    <Button 
-                      variant={comparisonPlans.includes(selectedPlan._id) ? "default" : "outline"}
-                      onClick={() => toggleComparison(selectedPlan._id)}
-                      className="flex-1"
-                    >
-                      {comparisonPlans.includes(selectedPlan._id) ? "Quitar de comparación" : "Agregar a comparación"}
-                    </Button>
-                    <Button onClick={() => setFormQuoteOpen(true)} className="flex-1">
-                      Solicitar Cotización
-                    </Button>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="pdf" className="flex-1 overflow-hidden mt-4">
-                  {selectedPlan.folleto?.[0] ? (
-                    <div className="h-full w-full rounded-lg overflow-hidden border border-border">
-                      <iframe
-                        src={selectedPlan.folleto[0]}
-                        className="w-full h-full min-h-[600px]"
-                        title={`PDF - ${selectedPlan.name}`}
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground">
-                      <p>No hay PDF disponible para este plan</p>
-                    </div>
-                  )}
-                </TabsContent>
-              </Tabs>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      <PlanDetailsModal
+        open={detailsModalOpen}
+        onOpenChange={setDetailsModalOpen}
+        plan={selectedPlan}
+        isInComparison={selectedPlan ? comparisonPlans.includes(selectedPlan._id) : false}
+        onToggleComparison={toggleComparison}
+        onRequestQuote={() => setFormQuoteOpen(true)}
+      />
     </Layout>
   );
 };

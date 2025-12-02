@@ -4,3 +4,8 @@ export { NavLink } from './NavLink';
 export { QuoteModal } from './QuoteModal';
 export { HealthPlanComparisonModal } from './HealthPlanComparisonModal';
 export { default as FormQuote } from './FormQuote';
+export { ResultsFilterSidebar } from './ResultsFilterSidebar';
+export { ResultsHeaderBar } from './ResultsHeaderBar';
+export { ResultsGrid } from './ResultsGrid';
+export { PlanCard } from './PlanCard';
+export { PlanDetailsModal } from './PlanDetailsModal';
