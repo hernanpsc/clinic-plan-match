@@ -68,37 +68,35 @@ const ATTRIBUTE_GROUPS = [
   "Reintegros y Servicios"
 ];
 
-// Estilos para la tabla sticky
+// Estilos para la tabla sticky con scroll horizontal
 const ComparisonStyles = `
-  .comparison-container {
-    max-height: calc(90vh - 120px); 
-    overflow: auto;
+  .comparison-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+  }
+  .comparison-table-wrapper {
+    overflow-y: auto;
+    max-height: calc(90vh - 200px);
   }
   .sticky-col {
     position: sticky;
     left: 0;
-    z-index: 10;
-    background-color: inherit;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    z-index: 15;
+    background-color: hsl(var(--background));
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
   }
   .sticky-header th {
     position: sticky;
     top: 0;
     z-index: 20;
     background-color: hsl(var(--background));
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     padding: 0; 
   }
   .corner-cell {
-    z-index: 30 !important;
+    z-index: 25 !important;
     background-color: hsl(var(--muted)) !important;
-  }
-  .sticky-group-header {
-    position: sticky;
-    left: 0;
-    z-index: 10;
-    background-color: hsl(var(--muted)) !important;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
   }
 `;
 
@@ -268,54 +266,56 @@ export const HealthPlanComparisonModal = ({
       <div className="flex flex-col h-full overflow-hidden">
         <style dangerouslySetInnerHTML={{ __html: ComparisonStyles }} />
         
-        <ScrollArea className="w-full h-full">
-          <table className="min-w-full table-fixed divide-y divide-border">
-            <thead className="sticky-header">
-              <tr>
-                <th scope="col" className="w-48 px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
-                  Beneficio / Atributo
-                </th>
-                {plansToCompare.map(plan => (
-                  <th key={plan._id} scope="col" className="min-w-[250px] border-l border-border">
-                    <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
+        <div className="comparison-scroll-container">
+          <div className="comparison-table-wrapper">
+            <table className="min-w-full table-fixed divide-y divide-border">
+              <thead className="sticky-header">
+                <tr>
+                  <th scope="col" className="w-48 px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
+                    Beneficio / Atributo
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-background">
-              {Object.entries(groupedAttributes).map(([groupName, attrNames]) => (
-                <React.Fragment key={groupName}>
-                  <tr className="bg-primary/10 border-t-2 border-t-primary">
-                    <td 
-                      colSpan={plansToCompare.length + 1} 
-                      className="px-6 py-4 font-bold text-lg text-primary text-center uppercase tracking-wide"
-                    >
-                      {groupName}
-                    </td>
-                  </tr>
-                  
-                  {attrNames.map((attrName, index) => (
-                    <tr key={attrName} className={index % 2 === 0 ? 'bg-background border-b border-border' : 'bg-muted/20 border-b border-border'}>
-                      <th scope="row" className="px-4 py-3 font-medium sticky-col text-left text-sm">
-                        {attrName}
-                      </th>
-                      {plansToCompare.map(plan => {
-                        const value = getPlanAttributeValue(plan, attrName);
-                        return (
-                          <td key={`${plan._id}-${attrName}`} className="w-64 px-4 py-3 text-center border-l border-border">
-                            <Badge variant={value === 'N/A' || value === 'No' ? 'secondary' : 'default'}>
-                              {value}
-                            </Badge>
-                          </td>
-                        );
-                      })}
-                    </tr>
+                  {plansToCompare.map(plan => (
+                    <th key={plan._id} scope="col" className="min-w-[250px] border-l border-border">
+                      <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
+                    </th>
                   ))}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
-        </ScrollArea>
+                </tr>
+              </thead>
+              <tbody className="bg-background">
+                {Object.entries(groupedAttributes).map(([groupName, attrNames]) => (
+                  <React.Fragment key={groupName}>
+                    <tr className="bg-primary/10 border-t-2 border-t-primary">
+                      <td 
+                        colSpan={plansToCompare.length + 1} 
+                        className="px-6 py-4 font-bold text-lg text-primary text-center uppercase tracking-wide"
+                      >
+                        {groupName}
+                      </td>
+                    </tr>
+                    
+                    {attrNames.map((attrName, index) => (
+                      <tr key={attrName} className={index % 2 === 0 ? 'bg-background border-b border-border' : 'bg-muted/20 border-b border-border'}>
+                        <th scope="row" className="px-4 py-3 font-medium sticky-col text-left text-sm">
+                          {attrName}
+                        </th>
+                        {plansToCompare.map(plan => {
+                          const value = getPlanAttributeValue(plan, attrName);
+                          return (
+                            <td key={`${plan._id}-${attrName}`} className="w-64 px-4 py-3 text-center border-l border-border">
+                              <Badge variant={value === 'N/A' || value === 'No' ? 'secondary' : 'default'}>
+                                {value}
+                              </Badge>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   };
@@ -340,53 +340,55 @@ export const HealthPlanComparisonModal = ({
 
     return (
       <div className="flex flex-col h-full overflow-hidden">
-        <ScrollArea className="w-full h-full">
-          <table className="min-w-full table-fixed divide-y divide-border">
-            <thead className="sticky-header">
-              <tr>
-                <th scope="col" className="w-[400px] px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
-                  Clínica
-                </th>
-                {plansToCompare.map(plan => (
-                  <th key={plan._id} scope="col" className="w-[150px] border-l border-border">
-                    <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-background">
-              {clinicas.map((clinica, idx) => (
-                <tr 
-                  key={clinica.item_id}
-                  className={idx % 2 === 0 ? "bg-background border-b border-border" : "bg-muted/20 border-b border-border"}
-                >
-                  <th scope="row" className="px-4 py-3 sticky-col text-left">
-                    <div>
-                      <p className="font-medium text-sm">{clinica.entity}</p>
-                      {clinica.ubicacion?.[0] && (
-                        <p className="text-xs text-muted-foreground">
-                          {clinica.ubicacion[0].barrio} - {clinica.ubicacion[0].region}
-                        </p>
-                      )}
-                    </div>
+        <div className="comparison-scroll-container">
+          <div className="comparison-table-wrapper">
+            <table className="min-w-full table-fixed divide-y divide-border">
+              <thead className="sticky-header">
+                <tr>
+                  <th scope="col" className="w-[400px] px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
+                    Clínica
                   </th>
                   {plansToCompare.map(plan => (
-                    <td 
-                      key={`${plan._id}-${clinica.item_id}`}
-                      className="px-4 py-3 text-center border-l border-border"
-                    >
-                      {planIncludesClinica(plan, clinica.item_id) ? (
-                        <Check className="h-5 w-5 text-green-600 mx-auto" />
-                      ) : (
-                        <X className="h-5 w-5 text-red-600 mx-auto" />
-                      )}
-                    </td>
+                    <th key={plan._id} scope="col" className="w-[150px] border-l border-border">
+                      <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </ScrollArea>
+              </thead>
+              <tbody className="bg-background">
+                {clinicas.map((clinica, idx) => (
+                  <tr 
+                    key={clinica.item_id}
+                    className={idx % 2 === 0 ? "bg-background border-b border-border" : "bg-muted/20 border-b border-border"}
+                  >
+                    <th scope="row" className="px-4 py-3 sticky-col text-left">
+                      <div>
+                        <p className="font-medium text-sm">{clinica.entity}</p>
+                        {clinica.ubicacion?.[0] && (
+                          <p className="text-xs text-muted-foreground">
+                            {clinica.ubicacion[0].barrio} - {clinica.ubicacion[0].region}
+                          </p>
+                        )}
+                      </div>
+                    </th>
+                    {plansToCompare.map(plan => (
+                      <td 
+                        key={`${plan._id}-${clinica.item_id}`}
+                        className="px-4 py-3 text-center border-l border-border"
+                      >
+                        {planIncludesClinica(plan, clinica.item_id) ? (
+                          <Check className="h-5 w-5 text-green-600 mx-auto" />
+                        ) : (
+                          <X className="h-5 w-5 text-red-600 mx-auto" />
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   };
@@ -501,15 +503,15 @@ export const HealthPlanComparisonModal = ({
 
         <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 min-h-0 bg-background">
           <div className="px-6 pt-4 shrink-0 bg-background">
-            <TabsList className="w-full justify-start bg-muted">
-              <TabsTrigger value="beneficios" className="data-[state=active]:bg-background">
+            <TabsList className="w-full justify-start bg-muted h-14">
+              <TabsTrigger value="beneficios" className="data-[state=active]:bg-background text-base px-6 py-3">
                 Beneficios
               </TabsTrigger>
-              <TabsTrigger value="clinicas" className="data-[state=active]:bg-background">
+              <TabsTrigger value="clinicas" className="data-[state=active]:bg-background text-base px-6 py-3">
                 Clínicas y Red
               </TabsTrigger>
-              <TabsTrigger value="add" className="data-[state=active]:bg-background">
-                <Plus className="w-4 h-4 mr-1" />
+              <TabsTrigger value="add" className="data-[state=active]:bg-background text-base px-6 py-3">
+                <Plus className="w-5 h-5 mr-2" />
                 Añadir Plan
               </TabsTrigger>
             </TabsList>

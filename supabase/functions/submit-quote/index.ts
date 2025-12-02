@@ -69,11 +69,12 @@ Deno.serve(async (req) => {
       timestamp: new Date().toISOString()
     };
 
-    console.log('Submit Quote - Enviando datos al endpoint externo:', 
-      'https://servidorplus.avalianonline.com.ar/cotizacion');
+    // Obtener URL del endpoint desde variable de entorno
+    const externalUrl = Deno.env.get('HEALTH_EXTERNAL_QUOTE_URL') || 'https://servidorplus.avalianonline.com.ar/cotizacion';
+    console.log('Submit Quote - Enviando datos al endpoint externo:', externalUrl);
 
     // Hacer la llamada al endpoint externo
-    const externalResponse = await fetch('https://servidorplus.avalianonline.com.ar/cotizacion', {
+    const externalResponse = await fetch(externalUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
