@@ -65,14 +65,17 @@ const ATTRIBUTE_GROUPS = [
 
 // Estilos para la tabla sticky con scroll horizontal
 const ComparisonStyles = `
+  .tabs-content-container {
+    height: 60vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
   .comparison-scroll-container {
     overflow-x: auto;
-    overflow-y: hidden;
-    width: 100%;
-  }
-  .comparison-table-wrapper {
     overflow-y: auto;
-    max-height: calc(90vh - 200px);
+    flex: 1;
+    width: 100%;
   }
   .sticky-col {
     position: sticky;
@@ -322,58 +325,56 @@ export const ComparisonPage = ({
     }
     
     return (
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="tabs-content-container">
         <style dangerouslySetInnerHTML={{ __html: ComparisonStyles }} />
         
         <div className="comparison-scroll-container">
-          <div className="comparison-table-wrapper">
-            <table className="min-w-full table-fixed divide-y divide-border">
-              <thead className="sticky-header">
-                <tr>
-                  <th scope="col" className="w-48 px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
-                    Beneficio / Atributo
+          <table className="min-w-full table-fixed divide-y divide-border">
+            <thead className="sticky-header">
+              <tr>
+                <th scope="col" className="w-48 px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
+                  Beneficio / Atributo
+                </th>
+                {plansToCompare.map(plan => (
+                  <th key={plan._id} scope="col" className="min-w-[250px] border-l border-border">
+                    <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
                   </th>
-                  {plansToCompare.map(plan => (
-                    <th key={plan._id} scope="col" className="min-w-[250px] border-l border-border">
-                      <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-background">
-                {Object.entries(groupedAttributes).map(([groupName, attrNames]) => (
-                  <React.Fragment key={groupName}>
-                    <tr className="bg-primary/10 border-t-2 border-t-primary">
-                      <td 
-                        colSpan={plansToCompare.length + 1} 
-                        className="px-6 py-4 font-bold text-lg text-primary text-center uppercase tracking-wide"
-                      >
-                        {groupName}
-                      </td>
-                    </tr>
-                    
-                    {attrNames.map((attrName, index) => (
-                      <tr key={attrName} className={index % 2 === 0 ? 'bg-background border-b border-border' : 'bg-muted/20 border-b border-border'}>
-                        <th scope="row" className="px-4 py-3 font-medium sticky-col text-left text-sm">
-                          {attrName}
-                        </th>
-                        {plansToCompare.map(plan => {
-                          const value = getPlanAttributeValue(plan, attrName);
-                          return (
-                            <td key={`${plan._id}-${attrName}`} className="w-64 px-4 py-3 text-center border-l border-border">
-                              <Badge variant={value === 'N/A' || value === 'No' ? 'secondary' : 'default'}>
-                                {value}
-                              </Badge>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </React.Fragment>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
+            <tbody className="bg-background">
+              {Object.entries(groupedAttributes).map(([groupName, attrNames]) => (
+                <React.Fragment key={groupName}>
+                  <tr className="bg-primary/10 border-t-2 border-t-primary">
+                    <td 
+                      colSpan={plansToCompare.length + 1} 
+                      className="px-6 py-4 font-bold text-lg text-primary text-center uppercase tracking-wide"
+                    >
+                      {groupName}
+                    </td>
+                  </tr>
+                  
+                  {attrNames.map((attrName, index) => (
+                    <tr key={attrName} className={index % 2 === 0 ? 'bg-background border-b border-border' : 'bg-muted/20 border-b border-border'}>
+                      <th scope="row" className="px-4 py-3 font-medium sticky-col text-left text-sm">
+                        {attrName}
+                      </th>
+                      {plansToCompare.map(plan => {
+                        const value = getPlanAttributeValue(plan, attrName);
+                        return (
+                          <td key={`${plan._id}-${attrName}`} className="w-64 px-4 py-3 text-center border-l border-border">
+                            <Badge variant={value === 'N/A' || value === 'No' ? 'secondary' : 'default'}>
+                              {value}
+                            </Badge>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     );
@@ -398,56 +399,52 @@ export const ComparisonPage = ({
     }
 
     return (
-      <div className="flex flex-col h-full overflow-hidden">
-        <div className="comparison-scroll-container">
-          <div className="comparison-table-wrapper">
-            <table className="min-w-full table-fixed divide-y divide-border">
-              <thead className="sticky-header">
-                <tr>
-                  <th scope="col" className="w-[400px] px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
-                    Clínica
-                  </th>
-                  {plansToCompare.map(plan => (
-                    <th key={plan._id} scope="col" className="w-[150px] border-l border-border">
-                      <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-background">
-                {clinicas.map((clinica, idx) => (
-                  <tr 
-                    key={clinica.item_id}
-                    className={idx % 2 === 0 ? "bg-background border-b border-border" : "bg-muted/20 border-b border-border"}
+      <div className="comparison-scroll-container">
+        <table className="min-w-full table-fixed divide-y divide-border">
+          <thead className="sticky-header">
+            <tr>
+              <th scope="col" className="w-[400px] px-4 py-3 sticky-col corner-cell text-left text-xs font-semibold uppercase">
+                Clínica
+              </th>
+              {plansToCompare.map(plan => (
+                <th key={plan._id} scope="col" className="w-[150px] border-l border-border">
+                  <PlanHeader plan={plan} onRemovePlan={onRemovePlan} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-background">
+            {clinicas.map((clinica, idx) => (
+              <tr 
+                key={clinica.item_id}
+                className={idx % 2 === 0 ? "bg-background border-b border-border" : "bg-muted/20 border-b border-border"}
+              >
+                <th scope="row" className="px-4 py-3 sticky-col text-left">
+                  <div>
+                    <p className="font-medium text-sm">{clinica.entity}</p>
+                    {clinica.ubicacion?.[0] && (
+                      <p className="text-xs text-muted-foreground">
+                        {clinica.ubicacion[0].barrio} - {clinica.ubicacion[0].region}
+                      </p>
+                    )}
+                  </div>
+                </th>
+                {plansToCompare.map(plan => (
+                  <td 
+                    key={`${plan._id}-${clinica.item_id}`}
+                    className="px-4 py-3 text-center border-l border-border"
                   >
-                    <th scope="row" className="px-4 py-3 sticky-col text-left">
-                      <div>
-                        <p className="font-medium text-sm">{clinica.entity}</p>
-                        {clinica.ubicacion?.[0] && (
-                          <p className="text-xs text-muted-foreground">
-                            {clinica.ubicacion[0].barrio} - {clinica.ubicacion[0].region}
-                          </p>
-                        )}
-                      </div>
-                    </th>
-                    {plansToCompare.map(plan => (
-                      <td 
-                        key={`${plan._id}-${clinica.item_id}`}
-                        className="px-4 py-3 text-center border-l border-border"
-                      >
-                        {planIncludesClinica(plan, clinica.item_id) ? (
-                          <Check className="h-5 w-5 text-green-600 mx-auto" />
-                        ) : (
-                          <X className="h-5 w-5 text-red-600 mx-auto" />
-                        )}
-                      </td>
-                    ))}
-                  </tr>
+                    {planIncludesClinica(plan, clinica.item_id) ? (
+                      <Check className="h-5 w-5 text-green-600 mx-auto" />
+                    ) : (
+                      <X className="h-5 w-5 text-red-600 mx-auto" />
+                    )}
+                  </td>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   };
@@ -458,22 +455,16 @@ export const ComparisonPage = ({
       : getClinicasByRegion(activeClinicaTab);
 
     return (
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col h-full">
         <style dangerouslySetInnerHTML={{ __html: ComparisonStyles }} />
-        
-        <div className="w-full overflow-x-auto border-b border-border bg-background shadow-sm shrink-0 z-40">
-          <table className="min-w-full table-fixed">
-  
-          </table>
-        </div>
         
         <Tabs 
           defaultValue="todas" 
           value={activeClinicaTab} 
           onValueChange={setActiveClinicaTab} 
-          className="flex flex-col flex-1 min-h-0"
+          className="flex flex-col flex-1"
         >
-          <div className="px-4 pt-4 border-b bg-background shrink-0">
+          <div className="px-4 pt-4 border-b bg-background">
             <TabsList className="w-full justify-start">
               <TabsTrigger value="todas">
                 Todas ({uniqueClinicas.length})
@@ -486,11 +477,9 @@ export const ComparisonPage = ({
             </TabsList>
           </div>
           
-          <ScrollArea className="flex-1 min-h-0 w-full">
-            <TabsContent value={activeClinicaTab} className="p-4 m-0">
-              {renderClinicasTable(clinicasToShow)} 
-            </TabsContent>
-          </ScrollArea>
+          <TabsContent value={activeClinicaTab} className="tabs-content-container m-0 mt-4">
+            {renderClinicasTable(clinicasToShow)} 
+          </TabsContent>
         </Tabs>
       </div>
     );
