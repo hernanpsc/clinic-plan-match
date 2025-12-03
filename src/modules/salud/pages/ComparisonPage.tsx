@@ -66,7 +66,7 @@ const ATTRIBUTE_GROUPS = [
 // Estilos para la tabla sticky con scroll horizontal
 const ComparisonStyles = `
   .tabs-content-container {
-    height: 60vh;
+    height: 55vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -95,6 +95,12 @@ const ComparisonStyles = `
   .corner-cell {
     z-index: 25 !important;
     background-color: hsl(var(--muted)) !important;
+  }
+  .comparison-tabs-list {
+    padding: 0.75rem 1rem;
+  }
+  .comparison-tabs-list [data-state="active"] {
+    font-weight: 600;
   }
 `;
 
@@ -552,48 +558,50 @@ export const ComparisonPage = ({
         <meta name="robots" content="noindex, follow" />
       </Helmet>
       
-      {/* Hero Header */}
-      <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/20 border-b border-border">
-        <div className="container mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/resultados')}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Volver a resultados
-            </Button>
-          </div>
-          <div className="space-y-2">
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
-              Comparación de Planes
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Compará en detalle los beneficios, cartilla médica y coberturas de cada plan
-            </p>
-            <div className="flex gap-3">
-              <Badge variant="secondary">{plansToCompare.length} planes seleccionados</Badge>
-              <Badge variant="outline">Máximo 4 planes</Badge>
+      {/* Hero Header - Compact */}
+      <div className="bg-gradient-to-br from-primary/5 via-background to-secondary/10 border-b border-border">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6 py-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/resultados')}
+                className="text-muted-foreground hover:text-foreground -ml-2"
+              >
+                <ArrowLeft className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Volver</span>
+              </Button>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+                  Comparación de Planes
+                </h1>
+                <p className="text-sm text-muted-foreground hidden sm:block">
+                  Compará beneficios, cartilla y coberturas
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Badge variant="secondary" className="text-xs">{plansToCompare.length} planes</Badge>
+              <Badge variant="outline" className="text-xs">Máx. 4</Badge>
             </div>
           </div>
         </div>
       </div>
 
       <div className="flex-1 bg-background">
-        <div className="container mx-auto max-w-7xl px-6 py-8">
-          <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="w-full justify-start bg-muted/30 p-1 rounded-xl h-14">
-              <TabsTrigger value="beneficios" className="rounded-lg text-base px-6 py-3">
+        <div className="container mx-auto max-w-6xl px-4 sm:px-6 py-4">
+          <Tabs defaultValue="beneficios" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <TabsList className="w-full justify-start bg-muted/30 p-1 rounded-xl h-12 sm:h-14">
+              <TabsTrigger value="beneficios" className="rounded-lg text-sm sm:text-base px-3 sm:px-6 py-2 sm:py-3">
                 Beneficios
               </TabsTrigger>
-              <TabsTrigger value="clinicas" className="rounded-lg text-base px-6 py-3">
-                Clínicas y Red
+              <TabsTrigger value="clinicas" className="rounded-lg text-sm sm:text-base px-3 sm:px-6 py-2 sm:py-3">
+                Clínicas
               </TabsTrigger>
-              <TabsTrigger value="add" className="rounded-lg flex items-center gap-2 text-base px-6 py-3">
-                <Plus className="w-5 h-5" />
-                Añadir Plan
+              <TabsTrigger value="add" className="rounded-lg flex items-center gap-1 sm:gap-2 text-sm sm:text-base px-3 sm:px-6 py-2 sm:py-3">
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline">Añadir</span>
               </TabsTrigger>
             </TabsList>
 
