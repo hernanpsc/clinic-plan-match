@@ -10,16 +10,16 @@ const Header = () => {
         <a href="/" className="flex items-center">
           <img 
             src="/assets/images/logos/logo-header-tr.png" 
-            alt="Comparador de Planes de Salud" 
+            alt="Mejor Plan - Consultores en Salud" 
             className="h-10 hidden md:block"
           />
           <img 
             src="/assets/images/logos/logo-header-tr-mobile.png" 
-            alt="Comparador de Planes de Salud" 
+            alt="Mejor Plan - Consultores en Salud" 
             className="h-10 md:hidden"
           />
         </a>
-        <Button onClick={() => navigate('/resultados')}>
+        <Button onClick={() => navigate('/resultados')} className="shadow-sm">
           Ver Planes
         </Button>
       </div>

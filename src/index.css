@@ -2,47 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Mejor Plan - Design System
+   Brand Identity: Professional + Friendly
+   Colors: Blue (Trust) + Green (Health/Fresh)
+   Typography: Plus Jakarta Sans (Bold & Catchy)
 */
 
 @layer base {
   :root {
-    --background: 210 100% 97%;
-    --foreground: 222 47% 11%;
+    /* Background & Surfaces */
+    --background: 200 30% 98%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 200 98% 45%;
+    /* Primary - Trust Blue */
+    --primary: 200 85% 48%;
     --primary-foreground: 0 0% 100%;
+    --primary-light: 200 85% 95%;
 
-    --secondary: 280 85% 65%;
+    /* Secondary - Health Green */
+    --secondary: 160 55% 42%;
     --secondary-foreground: 0 0% 100%;
+    --secondary-light: 160 55% 94%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    /* Muted */
+    --muted: 200 20% 96%;
+    --muted-foreground: 215 15% 50%;
 
-    --accent: 38 92% 50%;
+    /* Accent - Warm Orange for CTAs */
+    --accent: 25 95% 52%;
     --accent-foreground: 0 0% 100%;
 
+    /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 200 98% 45%;
+    /* Success */
+    --success: 160 55% 42%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning */
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 200 20% 88%;
+    --input: 200 20% 88%;
+    --ring: 200 85% 48%;
 
     --radius: 0.75rem;
     
-    --gradient-primary: linear-gradient(135deg, hsl(200 98% 45%), hsl(280 85% 65%));
-    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%), hsl(340 82% 52%));
-    --gradient-bg: linear-gradient(180deg, hsl(210 100% 97%), hsl(200 100% 95%));
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(200 85% 48%), hsl(160 55% 42%));
+    --gradient-hero: linear-gradient(180deg, hsl(200 85% 95%), hsl(160 55% 97%), hsl(200 30% 98%));
+    --gradient-accent: linear-gradient(135deg, hsl(25 95% 52%), hsl(340 82% 52%));
+    --gradient-bg: linear-gradient(180deg, hsl(200 30% 98%), hsl(200 40% 96%));
     
-    --shadow-colorful: 0 10px 30px -10px hsla(200, 98%, 45%, 0.2);
+    /* Shadows */
+    --shadow-colorful: 0 10px 30px -10px hsla(200, 85%, 48%, 0.15);
+    --shadow-card: 0 4px 20px -4px hsla(200, 85%, 48%, 0.1);
+    --shadow-hover: 0 8px 30px -8px hsla(200, 85%, 48%, 0.2);
+
+    /* Footer */
+    --footer-bg: 215 40% 18%;
+    --footer-foreground: 200 30% 98%;
+
+    /* Sidebar (keeping for compatibility) */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-primary: 200 85% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 200 85% 95%;
+    --sidebar-accent-foreground: 200 85% 48%;
+    --sidebar-border: 200 20% 88%;
+    --sidebar-ring: 200 85% 48%;
   }
 }
 
@@ -52,7 +90,35 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     background: var(--gradient-bg);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-hover {
+    box-shadow: var(--shadow-hover);
   }
 }
