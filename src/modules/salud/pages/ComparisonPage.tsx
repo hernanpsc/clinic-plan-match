@@ -64,18 +64,17 @@ const ATTRIBUTE_GROUPS = [
   "Reintegros y Servicios"
 ];
 
-// Estilos para la tabla sticky con scroll horizontal
+// Estilos para la tabla sticky con scroll horizontal - sin altura fija
 const ComparisonStyles = `
   .tabs-content-container {
-    height: 60vh;
-    overflow: hidden;
+    min-height: 400px;
+    overflow: visible;
     display: flex;
     flex-direction: column;
   }
   .comparison-scroll-container {
     overflow-x: auto;
-    overflow-y: auto;
-    flex: 1;
+    overflow-y: visible;
     width: 100%;
   }
   .sticky-col {
