@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Grid3x3, Plus } from "lucide-react";
+import { Search, Grid3x3, Plus, Heart, Shield, Users, Building2, Stethoscope, Baby } from "lucide-react";
 import { getHealthPlans, type HealthPlan, type Clinica } from "@/services/health.service";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/layouts/Layout";
@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 // Interfaces are now imported from health.service.ts
 
@@ -178,40 +179,90 @@ const ResultadosPage = () => {
         isComparisonModalOpen={false}
       />
       
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary/5 via-background to-secondary/20 border-b border-border">
-        <div className="container mx-auto px-6 py-12 lg:py-16">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground">
-                Encontrá el plan perfecto
+      {/* Compact Hero Banner - E-commerce Style */}
+      <div className="relative bg-gradient-to-r from-primary via-primary/90 to-secondary overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIgMS44LTQgNC00czQgMS44IDQgNC0xLjggNC00IDQtNC0xLjgtNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
+        <div className="container mx-auto px-4 py-6 lg:py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <h1 className="text-2xl lg:text-3xl font-bold text-primary-foreground">
+                Encontrá el plan perfecto para vos
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Compará cobertura, precio y beneficios de los mejores planes de salud
+              <p className="text-primary-foreground/80 text-sm mt-1">
+                Compará {healthPlans.length} planes de {providers.length} prepagas
               </p>
-              <div className="flex gap-3 text-sm text-muted-foreground">
-                <Badge variant="secondary">{healthPlans.length} planes disponibles</Badge>
-                <Badge variant="secondary">{providers.length} prepagas</Badge>
-              </div>
             </div>
-            <div className="relative h-64 lg:h-80 rounded-xl overflow-hidden shadow-2xl border border-border bg-muted/30">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
-                <div className="text-center text-muted-foreground p-8">
-                  <Search className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-sm">Comparador inteligente de planes de salud</p>
-                </div>
-              </div>
+            <div className="flex gap-2">
+              <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                {healthPlans.length} planes
+              </Badge>
+              <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                {providers.length} prepagas
+              </Badge>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Info Bar */}
-      <div className="bg-muted/30 border-b border-border">
-        <div className="container mx-auto px-6 py-4">
-          <p className="text-sm text-center text-muted-foreground">
-            Usá los filtros para encontrar el plan ideal para vos y tu familia
-          </p>
+      {/* Quick Navigation Bar - E-commerce Style */}
+      <div className="bg-card border-b border-border shadow-sm">
+        <div className="container mx-auto px-4">
+          <div className="flex gap-2 py-3 overflow-x-auto scrollbar-hide">
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-2 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              onClick={() => setSelectedProviders([])}
+            >
+              <Heart className="h-4 w-4" />
+              Todos los planes
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-2 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              onClick={() => setSortBy("price-asc")}
+            >
+              <Shield className="h-4 w-4" />
+              Más económicos
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-2 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              onClick={() => setMinRating([4])}
+            >
+              <Users className="h-4 w-4" />
+              Mejor valorados
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-2 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              onClick={() => setPriceRange([0, 200])}
+            >
+              <Building2 className="h-4 w-4" />
+              Planes básicos
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-2 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              onClick={() => setPriceRange([300, 600])}
+            >
+              <Stethoscope className="h-4 w-4" />
+              Cobertura premium
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0 gap-2 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              onClick={() => setFormQuoteOpen(true)}
+            >
+              <Baby className="h-4 w-4" />
+              Planes familiares
+            </Button>
+          </div>
         </div>
       </div>
       
