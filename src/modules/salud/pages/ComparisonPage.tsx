@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollableTabs } from "@/modules/salud/components/ScrollableTabs";
 
 // --- INTERFACES ---
 interface Ubicacion {
@@ -455,26 +456,28 @@ export const ComparisonPage = ({
       : getClinicasByRegion(activeClinicaTab);
 
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full max-w-full overflow-hidden">
         <style dangerouslySetInnerHTML={{ __html: ComparisonStyles }} />
         
         <Tabs 
           defaultValue="todas" 
           value={activeClinicaTab} 
           onValueChange={setActiveClinicaTab} 
-          className="flex flex-col flex-1"
+          className="flex flex-col flex-1 max-w-full"
         >
-          <div className="px-4 pt-4 border-b bg-background">
-            <TabsList className="w-full justify-start">
-              <TabsTrigger value="todas">
-                Todas ({uniqueClinicas.length})
-              </TabsTrigger>
-              {regions.map(region => (
-                <TabsTrigger key={region} value={region}>
-                  {region} ({getClinicasByRegion(region).length})
+          <div className="px-4 pt-4 border-b bg-background max-w-full">
+            <ScrollableTabs className="pb-2">
+              <TabsList className="inline-flex h-10 items-center justify-start gap-1 bg-muted p-1 w-auto">
+                <TabsTrigger value="todas" className="shrink-0">
+                  Todas ({uniqueClinicas.length})
                 </TabsTrigger>
-              ))}
-            </TabsList>
+                {regions.map(region => (
+                  <TabsTrigger key={region} value={region} className="shrink-0">
+                    {region} ({getClinicasByRegion(region).length})
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </ScrollableTabs>
           </div>
           
           <TabsContent value={activeClinicaTab} className="tabs-content-container m-0 mt-4">
