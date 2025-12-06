@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import AuthService from '@/services/auth.service';
 import Layout from '@/layouts/Layout';
@@ -14,6 +15,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,7 @@ const LoginPage = () => {
         toast({
           variant: 'destructive',
           title: 'Error al iniciar sesión',
-          description: error.message,
+          description: AuthService.getAuthErrorMessage(error),
         });
         return;
       }
@@ -87,7 +89,18 @@ const LoginPage = () => {
                   disabled={isLoading}
                 />
               </div>
-              <div className="text-right">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    disabled={isLoading}
+                  />
+                  <Label htmlFor="rememberMe" className="text-sm cursor-pointer">
+                    Recordarme
+                  </Label>
+                </div>
                 <Link
                   to="/auth/forgot-password"
                   className="text-sm text-primary hover:underline"

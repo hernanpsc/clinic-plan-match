@@ -13,6 +13,13 @@ export interface SessionResponse {
   error: AuthError | null;
 }
 
+export interface SignUpData {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 /**
  * Sign in with email and password
  */
@@ -30,16 +37,20 @@ export const signIn = async (email: string, password: string): Promise<AuthRespo
 };
 
 /**
- * Sign up with email and password
+ * Sign up with email, password, and optional user metadata
  */
-export const signUp = async (email: string, password: string): Promise<AuthResponse> => {
+export const signUp = async (signUpData: SignUpData): Promise<AuthResponse> => {
   const redirectUrl = `${window.location.origin}/`;
 
   const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
+    email: signUpData.email,
+    password: signUpData.password,
     options: {
       emailRedirectTo: redirectUrl,
+      data: {
+        first_name: signUpData.firstName || null,
+        last_name: signUpData.lastName || null,
+      },
     },
   });
 
@@ -70,6 +81,17 @@ export const getSession = async (): Promise<SessionResponse> => {
 };
 
 /**
+ * Get the current user
+ */
+export const getUser = async (): Promise<{ user: User | null; error: AuthError | null }> => {
+  const { data, error } = await supabase.auth.getUser();
+  return {
+    user: data.user,
+    error,
+  };
+};
+
+/**
  * Subscribe to auth state changes
  */
 export const onAuthStateChange = (
@@ -80,13 +102,31 @@ export const onAuthStateChange = (
   });
 };
 
+/**
+ * Helper to translate Supabase auth errors to Spanish
+ */
+export const getAuthErrorMessage = (error: AuthError): string => {
+  const errorMessages: Record<string, string> = {
+    'Invalid login credentials': 'Credenciales inválidas. Verifica tu correo y contraseña.',
+    'Email not confirmed': 'Por favor confirma tu correo electrónico.',
+    'User already registered': 'Este correo ya está registrado. Intenta iniciar sesión.',
+    'Password should be at least 6 characters': 'La contraseña debe tener al menos 6 caracteres.',
+    'Signup requires a valid password': 'Se requiere una contraseña válida.',
+    'Unable to validate email address: invalid format': 'El formato del correo electrónico no es válido.',
+  };
+
+  return errorMessages[error.message] || error.message;
+};
+
 // Default export as service object
 const AuthService = {
   signIn,
   signUp,
   signOut,
   getSession,
+  getUser,
   onAuthStateChange,
+  getAuthErrorMessage,
 };
 
 export default AuthService;

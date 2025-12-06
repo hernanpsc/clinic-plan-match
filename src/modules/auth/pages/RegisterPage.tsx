@@ -12,6 +12,8 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -40,18 +42,29 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      const { user, error } = await AuthService.signUp(email, password);
+      const { user, session, error } = await AuthService.signUp({
+        email,
+        password,
+        firstName,
+        lastName,
+      });
 
       if (error) {
         toast({
           variant: 'destructive',
           title: 'Error al registrarse',
-          description: error.message,
+          description: AuthService.getAuthErrorMessage(error),
         });
         return;
       }
 
-      if (user) {
+      if (user && session) {
+        toast({
+          title: '¡Bienvenido!',
+          description: 'Tu cuenta ha sido creada exitosamente.',
+        });
+        navigate('/');
+      } else if (user) {
         toast({
           title: 'Registro exitoso',
           description: 'Revisa tu correo electrónico para confirmar tu cuenta.',
@@ -83,6 +96,30 @@ const RegisterPage = () => {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">Nombre</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="Juan"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Apellido</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Pérez"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Correo electrónico</Label>
                 <Input
