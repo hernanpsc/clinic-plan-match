@@ -2,6 +2,7 @@ export { ComparisonBar } from './ComparisonBar';
 export { FloatingQuoteButton } from './FloatingQuoteButton';
 export { NavLink } from './NavLink';
 export { ScrollableTabs } from './ScrollableTabs';
+export { default as QuoteRecoveryModal } from './QuoteRecoveryModal';
 export { QuoteModal } from './QuoteModal';
 export { HealthPlanComparisonModal } from './HealthPlanComparisonModal';
 export { default as FormQuote } from './FormQuote';

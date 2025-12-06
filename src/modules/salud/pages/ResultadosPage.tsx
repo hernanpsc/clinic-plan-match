@@ -11,7 +11,9 @@ import { ResultsFilterSidebar } from "@/modules/salud/components/ResultsFilterSi
 import { ResultsHeaderBar } from "@/modules/salud/components/ResultsHeaderBar";
 import { ResultsGrid } from "@/modules/salud/components/ResultsGrid";
 import { PlanDetailsModal } from "@/modules/salud/components/PlanDetailsModal";
+import { QuoteRecoveryModal } from "@/modules/salud/components";
 import { useToast } from "@/hooks/use-toast";
+import { useCotizacion } from "@/hooks/useCotizacion";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +24,17 @@ import { Button } from "@/components/ui/button";
 const ResultadosPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  // Cotización hook for form persistence
+  const {
+    formData: cotizacionFormData,
+    savedFormData,
+    showRecoveryModal,
+    setShowRecoveryModal,
+    handleRecoverForm,
+    handleStartNew
+  } = useCotizacion();
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [priceRange, setPriceRange] = useState([0, 600]);
@@ -368,6 +381,15 @@ const ResultadosPage = () => {
         isInComparison={selectedPlan ? comparisonPlans.includes(selectedPlan._id) : false}
         onToggleComparison={toggleComparison}
         onRequestQuote={() => setFormQuoteOpen(true)}
+      />
+
+      {/* Quote Recovery Modal */}
+      <QuoteRecoveryModal
+        open={showRecoveryModal}
+        onOpenChange={setShowRecoveryModal}
+        savedFormData={savedFormData}
+        onRecover={handleRecoverForm}
+        onStartNew={handleStartNew}
       />
     </Layout>
   );
