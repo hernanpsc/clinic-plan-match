@@ -5,7 +5,6 @@ const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
-const EXTERNAL_QUOTE_URL = Deno.env.get('HEALTH_EXTERNAL_QUOTE_URL') || 'URL_NO_CONFIGURADA';
 interface QuoteRequest {
   group: number;
   edad_1: number;
@@ -37,6 +36,16 @@ Deno.serve(async (req: { method: string; json: () => QuoteRequest | PromiseLike<
 
   try {
     console.log('Submit Quote - Iniciando procesamiento de cotización');
+
+    // Verificar que la URL externa esté configurada (fail-fast)
+    const EXTERNAL_QUOTE_URL = Deno.env.get('HEALTH_EXTERNAL_QUOTE_URL');
+    if (!EXTERNAL_QUOTE_URL) {
+      console.error('ERROR: Variable de entorno HEALTH_EXTERNAL_QUOTE_URL no configurada.');
+      return new Response(
+        JSON.stringify({ error: 'Configuración de servidor incompleta.' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Parsear el cuerpo de la solicitud
     const quoteData: QuoteRequest = await req.json();
@@ -70,12 +79,10 @@ Deno.serve(async (req: { method: string; json: () => QuoteRequest | PromiseLike<
       timestamp: new Date().toISOString()
     };
 
-    // Obtener URL del endpoint desde variable de entorno
-    const externalUrl = Deno.env.get('HEALTH_EXTERNAL_QUOTE_URL') || 'https://servidorplus.avalianonline.com.ar/cotizacion';
-    console.log('Submit Quote - Enviando datos al endpoint externo:', externalUrl);
+    console.log('Submit Quote - Enviando datos al endpoint externo:', EXTERNAL_QUOTE_URL);
 
     // Hacer la llamada al endpoint externo
-    const externalResponse = await fetch(externalUrl, {
+    const externalResponse = await fetch(EXTERNAL_QUOTE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

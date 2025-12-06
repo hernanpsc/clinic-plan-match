@@ -9,7 +9,7 @@ const providers = [
 
 const LogosGrid = () => {
   return (
-    <section className="py-20 px-4 bg-secondary/30">
+    <section className="py-20 px-4 bg-secondary-light">
       <div className="container mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-foreground">
           Prepagas destacadas
@@ -17,11 +17,11 @@ const LogosGrid = () => {
         <p className="text-center text-muted-foreground mb-12">
           Trabajamos con las mejores prepagas de Argentina
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           {providers.map((provider) => (
             <div
               key={provider.name}
-              className="bg-background rounded-lg p-6 flex items-center justify-center border border-border hover:shadow-lg transition-shadow"
+              className="bg-card rounded-xl p-6 flex items-center justify-center border border-border shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1"
             >
               <img
                 src={provider.logo}
